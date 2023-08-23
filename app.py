@@ -32,10 +32,11 @@ def after_request(response):
     return response
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     """Show Home Page"""
-    if request.method == "GET":
+    # get things started
+    if request.method == "POST":
         return render_template ("index.html")
     else:
         return render_template("customer_order.html")
