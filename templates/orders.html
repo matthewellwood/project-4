@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Ordered Items
+{% endblock %}
+
+{% block main %}
+<h2>Order Items</h2>
+<form action="/orders" method="post">
+<button class="btn btn-primary" type="submit">Add Items</button>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-start">Staff Member</th>
+            <th class="text-start">Order Number</th>
+            <th class="text-start">Order Date</th>
+            <th class="text-start">Delivery Date</th>
+            <th class="text-start">Total Order Cost</th>           
+            <th class="text-start">Deposit Taken</th>
+            <th class="text-end">Balance to Pay</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in order %}
+        <tr>
+            <td class="text-start">{{ row["staff_member"] }}</td>
+            <td class="text-start">{{ row["order_no"] }}</td>
+            <td class="text-start">{{ row["order_date"] }}</td>
+            <td class="text-start">{{ row["delivery_date"] }}</td>
+            <td class="text-start">{{ row["selling_price"] * row["quantity"] }}</td>
+            <td class="text-start">{{ row["deposit"] }}</td>
+            <td class="text-start">{{ row["Balance"] }}</td>
+        </tr>
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-start">Item ID</th>
+                    <th class="text-start">Quantity</th>
+                    <th class="text-start">Name</th>
+                    <th class="text-start">Description</th>
+                    <th class="text-start">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in order %}
+                <tr>
+                    <td class="text-start">{{ row["item_id"] }}</td>
+                    <td class="text-start">{{ row["quantity"] }}</td>
+                    <td class="text-start">{{ row["item_name"] }}</td>
+                    <td class="text-start">{{ row["item_description"] }}</td>
+                    <td class="text-start">{{ row["selling_price"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </tbody>
+
+
+
+
+
+
+{% endblock %}
