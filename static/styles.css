@@ -21,3 +21,72 @@ nav .navbar-brand .green
 {
     color: #2e944b;
 }
+
+.wrapper{
+	width: 1000px;
+	background-color: rgb(255,255,255);
+	margin: 0 auto;
+}
+
+ul.site-navigation {
+	text-align: center;
+    list-style: none;
+}
+
+ul.site-navigation li a{
+	padding: 50px 0 47px 0;
+	font-family: 'Arvo', serif, Georgia;
+	width: 125px;
+	float: left;
+	letter-spacing: 4px;
+	text-transform: uppercase;
+	-o-transition:.5s;
+    -ms-transition:.5s;
+    -moz-transition:.5s;
+    -webkit-transition:.5s;
+    transition:.5s;
+	color: rgb(82,82,82);
+	border-bottom: 3px solid transparent;
+}
+
+ul.site-navigation > li {
+    position: relative;
+    width: 125px;
+    float:left;
+    margin: 0;
+}
+
+ul.site-navigation a:hover{
+	font-weight: bold;
+	border-bottom: 3px solid rgb(4,141,195);
+	text-shadow: rgb(200, 200, 200) 1px 1px 0px;
+	padding: 97px 0 0 0;
+}
+
+ul.site-navigation ul {
+    list-style: none;
+     height: 50px;
+     left: 0;
+     z-index: 1000;
+    padding: 0;
+    display: none;
+}
+
+ul.site-navigation ul li {
+     float: none;
+     line-height: 50px;
+ }
+
+ul.site-navigation ul li a {
+     font-weight: regular;
+     font-size: 20px;
+ }
+
+ul.site-navigation li:hover ul {
+     display: block;
+    position: absolute;
+    width: 125px;
+    top: 100%;
+    left: 0;
+
+}
