@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Main Screen
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Current Stock of Lounge furniture</h2>
+    <form action="/stock_list">                     
+        <td><button class="btn btn-primary" type="submit">Back</button></td>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Type</th>
+                <th class="text-start">Range</th>
+                <th class="text-start">Description</th>
+                <th class="text-start">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in lounge %}
+            <tr>
+                <td class="text-start">{{ row["Type"] }}</td>
+                <td class="text-start">{{ row["Range"] }}</td>
+                <td class="text-start">{{ row["Style"] }}</td>
+                <td class="text-start">{{ row["selling_price"] }}</td>
+                <form action="/order_details" method="post">
+                    <td><input type="hidden" name="item" VALUE="{{ row['item_id'] }}"></td>   
+                    <td class="text-start"><input class="form-control mx-auto w-auto" name ="Quantity" placeholder="Quantity to order" type="number"></td>
+                    <td class="text-start"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </div>
+</form>
+
+
+{% endblock %}
