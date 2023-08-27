@@ -27,12 +27,12 @@ Main Screen
                 <td class="text-start">{{ row["Range"] }}</td>
                 <td class="text-start">{{ row["Style"] }}</td>
                 <td class="text-start">{{ row["selling_price"] }}</td>
-                <form action="/order_details" method="post">
+                <form action="/order_details" method="POST">
                     <td><input type="hidden" name="item" VALUE="{{ row['item_id'] }}"></td>   
                     <td class="text-start"><input class="form-control mx-auto w-auto" name ="Quantity" placeholder="Quantity to order" type="number"></td>
                     <td class="text-start"><button class="btn btn-primary" type="submit">Add to Order</button></td>
                 </form>
-            </tr>
+            </tr> 
             {% endfor %}
         </tbody>
     </div>
