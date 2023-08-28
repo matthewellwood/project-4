@@ -12,8 +12,8 @@ Main Screen
     <table class="table table-striped">
         <thead>
             <tr>
-                <th class="text-start">Stock Type</th>
                 <th class="text-start">Range</th>
+                <th class="text-start">Name</th>
                 <th class="text-start">Description</th>
                 <th class="text-start">Price</th>                
             </tr>
@@ -22,12 +22,15 @@ Main Screen
         <tbody>
             {% for row in bedroom %}
             <tr>
-                <td class="text-start">{{ row["Type"] }}</td>
                 <td class="text-start">{{ row["Range"] }}</td>
-                <td class="text-start">{{ row["Style"] }}</td>
+                <td class="text-start">{{ row["Name"] }}</td>
+                <td class="text-start">{{ row["Description"] }}</td>
                 <td class="text-start">{{ row["selling_price"] }}</td>
-                <td class="text-start"><button class="btn btn-primary" type="submit">Info</button></td>
-                <td class="text-start"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+                <form action="/add_to_order" method="POST">
+                    <td><input type="hidden" name="item_id" VALUE="{{ row['item_id'] }}"></td>   
+                    <td class="text-start"><input class="form-control mx-auto w-auto" name ="Quantity" placeholder="Quantity to order" type="number"></td>
+                    <td class="text-start"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+                </form>
                 </tr>
             {% endfor %}
         </tbody>

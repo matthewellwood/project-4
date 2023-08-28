@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Current Order
+{% endblock %}
+
+{% block main %}
+<h2>Current Order</h2>
+<table Class = "table table-striped">
+    <thead>
+            <tr>
+
+        <tr>
+            <form action="/stock_list" method="post">
+                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+            </form>
+            <td class="border-0 fw-bold text-end">Order Number</td>
+            <td class="border-0 fw-bold text-start">{{ order_number }}</td>
+
+            <td class="border-0 fw-bold text-end" colspan="-4">Total Order Cost</td>
+            <td class="border-0 fw-bold text-start">{{ total_cost | GBP }}</td>
+        </tr>
+    </thead>
+    <tbody>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>                
+                    <th class="text-start">Item ID</th>
+                    <th class="text-start">Quantity</th>
+                    <th class="text-start">Name</th>
+                    <th class="text-start">Description</th>
+                    <th class="text-start">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in current %}
+                <tr>
+                    <td class="text-start">{{ row["item_id"] }}</td>
+                    <td class="text-start">{{ row["Quantity"] }}</td>
+                    <td class="text-start">{{ row["Name"] }}</td>
+                    <td class="text-start">{{ row["Description"] }}</td>
+                    <td class="text-start">{{ row["selling_price"] |GBP }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+    </tbody>
+
+    </table>
+{% endblock %}

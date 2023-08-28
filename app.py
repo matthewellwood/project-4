@@ -69,7 +69,7 @@ def list_of_orders():
             #name = row["Range"]
             #item_description = row["Style"]
             #selling_price = row["selling_price"]
-        db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_id) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
+        db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_number) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
         return render_template("stock_list.html", order_no = order_no)
     else:
         ord_detail=db.execute("select * from orders;")
@@ -95,7 +95,7 @@ def lounge():
         # do this
             return render_template("lounge.html")
         else:
-            lounge = db.execute("SELECT * FROM stock WHERE Type = 'lounge' ;")
+            lounge = db.execute("SELECT * FROM stock WHERE Range = 'lounge' ;")
             return render_template("lounge.html", lounge = lounge)
 
 
@@ -103,11 +103,11 @@ def lounge():
 def bedroom():
         if request.method == "POST":
         # do this
-            bedroom = db.execute("SELECT * FROM stock WHERE Type = 'Bedroom' ;")
+            bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
             return render_template("bedroom.html", bedroom = bedroom) 
             #return render_template("stock_list.html")
         else:
-            bedroom = db.execute("SELECT * FROM stock WHERE Type = 'Bedroom' ;")
+            bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
             return render_template("bedroom.html", bedroom = bedroom)
         
 
@@ -132,13 +132,34 @@ def order_details():
         #for row in order_number:
             #current = row["order_no"]
             #current_order = int(current)
-        #db.execute("INSERT INTO orders VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",'','',order_number,item_id,'','','','','', name, item_description,'', '', '', '', '', selling_price, '', quantity, '', '')
-        #db.execute("INSERT INTO orders VALUES ('', '', '?','?', '', '', '', '', '',  '?', '?', '', '', '', '', '', '?', '', '?', '', '');",order_number,item_id, name, item_description, selling_price, quantity)
-        db.execute("INSERT INTO orders VALUES item_id = (?), selling_price = (?), quantity = (?) order_no = (?);",item_id, selling_price, quantity, order_number)
+        db.execute("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_number)
         order_info = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_number)
         return render_template("orders.html",order = order_info)
     else:
         ord_detail = db.execute("select staff_member, order_id, order_date, completion, orders.selling_price, delivery_date, stock.item_id, orders.item_name, address_3, postcode from orders join customers on orders.cust_id = customers.id join stock on orders.item_name = stock.item_name;")
         return render_template("list_of_orders.html", ord_detail = ord_detail)
     
-    
+
+@app.route("/add_to_order", methods=["GET", "POST"])
+def current_orders():
+    """Show Order Form"""
+    if request.method == "POST":
+        order_no = request.form.get("order_no")
+        item_id = request.form.get("item_id")
+        quantity = request.form.get("Quantity")
+        get_details = db.execute("SELECT selling_price FROM stock WHERE item_id = (?);", item_id)
+        for row in get_details:
+            selling_price = row["selling_price"]
+        db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
+        current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id;")
+        for row in current:
+            sell = row["selling_price"]
+            quant = int(quantity)
+            total = quant * sell
+            tot += total
+        return render_template("current_order.html",current = current,order_number = order_no, total_cost = tot)
+    else:
+        # do the other
+        return render_template("stock_list.html")
+
+

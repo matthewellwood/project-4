@@ -26,7 +26,7 @@ New Order
         <tbody>
             {% for row in ord_detail %}
             <tr>
-                <form action="/list_of_orders" method="post">
+                <form action="/add_to_order" method="post">
                     <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
                 </form>
                 <td class="text-start">{{ row["staff_member"] }}</td>
