@@ -52,7 +52,7 @@ def orders():
 
 
 @app.route("/open_orders", methods=["GET", "POST"])
-def list_of_orders():
+def open_orders():
     # do this
     if request.method == "POST":
         # do this
@@ -168,7 +168,7 @@ def save_current():
            # quantity = row ["Quantity"]
            # order_no = row ["order_number"]
            # db.execute ("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);", item_id, selling_price, quantity, order_no)
-        return render_template ("orders.html")
+        return render_template ("open_orders.html")
     else:
         return render_template("orders.html")
 
