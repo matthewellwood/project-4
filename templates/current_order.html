@@ -43,8 +43,9 @@ Current Order
                     <td class="text-start">{{ row["selling_price"] |GBP }}</td>
                 </tr>
                 {% endfor %}
-            </tbody>
+        <form action="/save_current" method="post">
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+        </form>
     </tbody>
-
-    </table>
+</table>
 {% endblock %}

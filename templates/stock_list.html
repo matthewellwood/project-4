@@ -11,9 +11,16 @@ Stock Selector
    
         <thead>
             <div id="nav">
-                    <li><a href="lounge.html">Lounge Furniture</a></li>
-                    <li><a href="/bedroom.html">Bedroom Collection</a></li>
+                <form action="/lounge" method="POST">
+                    <td><input name="order_no" VALUE="{{ order_no }}"></td>
+                    <td><button class="btn btn-primary" type="submit">Lounge Furniture</button></td>
+                </form>
+                <form action="/bedroom" method="POST">
+                    <td><input name="order_no" VALUE="{{ order_no }}">
+                    <td><button class="btn btn-primary" type="submit">Bedroom Collection</button></td>
+                </form>
                     <li><a href="#">New Items to Order in</a></li>
+
                        
                    
                

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+New Order
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Current Orders</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="text-start">Staff Member</th>
+                <th class="text-start">Order Number</th>
+                <th class="text-start">Order Date</th>
+                <th class="text-start">Delivery Date</th>
+                <th class="text-start">Total Amount</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in ord_detail %}
+            <tr>
+                <form action="/show_content" method="POST">
+                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Show Order Contents</button></td>
+                </form>
+                <td class="text-start">{{ row["staff_member"] }}</td>
+                <td class="text-start">{{ row["order_no"] }}</td>
+                <td class="text-start">{{ row["order_date"] }}</td>
+                <td class="text-start">{{ row["delivery_date"] }}</td>
+                <td class="text-start">{{ row["total"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

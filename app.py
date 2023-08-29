@@ -51,7 +51,7 @@ def orders():
         return render_template("orders.html")
 
 
-@app.route("/list_of_orders", methods=["GET", "POST"])
+@app.route("/open_orders", methods=["GET", "POST"])
 def list_of_orders():
     # do this
     if request.method == "POST":
@@ -62,50 +62,47 @@ def list_of_orders():
             customer_id = row["cust_id"]
             staff_member = row["staff_member"]
             order_date = row["order_date"]
-            #customer_last_name = row ["customer_last_name"]
             item_id = row["item_id"]
-        #item_check = db.execute("SELECT Range, Style, selling_price FROM stock WHERE item_id = (?);", item_id)
-        #for row in item_check:
-            #name = row["Range"]
-            #item_description = row["Style"]
-            #selling_price = row["selling_price"]
         db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_number) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
         return render_template("stock_list.html", order_no = order_no)
     else:
         ord_detail=db.execute("select * from orders;")
-        #ord_detail = db.execute("select * from orders join customers on orders.cust_id = customers.id;")
-        #return render_template("list_of_orders.html", ord_detail = ord_detail)
-        return render_template("list_of_orders.html", ord_detail = ord_detail)
+        return render_template("open_orders.html", ord_detail = ord_detail)
 
 
 @app.route("/stock_list", methods=["GET", "POST"])
 def stock_list():
         if request.method == "POST":
         # do this
-            stock = db.execute("SELECT * FROM stock;")
-            return render_template("stock_list.html")
+            order_no = request.form.get("order_no")
+            stock = db.execute("SELECT * FROM stock ;")
+            return render_template("stock_list.html",order_no = order_no)
         else:
+            order_no = request.form.get("order_no")
             stock = db.execute("SELECT * FROM stock;")
-            return render_template("stock_list.html", stock = stock)
+            return render_template("stock_list.html", stock = stock, order_no = order_no)
 
 
-@app.route("/lounge.html", methods=["GET", "POST"])
+@app.route("/lounge", methods=["GET", "POST"])
 def lounge():
         if request.method == "POST":
         # do this
-            return render_template("lounge.html")
+            order_no = request.form.get("order_no")
+            lounge = db.execute("SELECT * FROM stock WHERE Range = 'lounge' ;")
+            return render_template("lounge.html", lounge = lounge, order_no = order_no)
+         
         else:
             lounge = db.execute("SELECT * FROM stock WHERE Range = 'lounge' ;")
             return render_template("lounge.html", lounge = lounge)
 
 
-@app.route("/bedroom.html", methods=["GET", "POST"])
+@app.route("/bedroom", methods=["GET", "POST"])
 def bedroom():
         if request.method == "POST":
         # do this
+            order_no = request.form.get("order_no")
             bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
-            return render_template("bedroom.html", bedroom = bedroom) 
-            #return render_template("stock_list.html")
+            return render_template("bedroom.html", bedroom = bedroom, order_no = order_no) 
         else:
             bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
             return render_template("bedroom.html", bedroom = bedroom)
@@ -128,16 +125,12 @@ def order_details():
             name = row["Range"]
             item_description = row["Style"]
             selling_price = row["selling_price"]
-        #order_number = db.execute("SELECT order_no FROM orders ORDER BY order_no DESC LIMIT 1;")
-        #for row in order_number:
-            #current = row["order_no"]
-            #current_order = int(current)
         db.execute("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_number)
         order_info = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_number)
         return render_template("orders.html",order = order_info)
     else:
         ord_detail = db.execute("select staff_member, order_id, order_date, completion, orders.selling_price, delivery_date, stock.item_id, orders.item_name, address_3, postcode from orders join customers on orders.cust_id = customers.id join stock on orders.item_name = stock.item_name;")
-        return render_template("list_of_orders.html", ord_detail = ord_detail)
+        return render_template("order_contents.html", ord_detail = ord_detail)
     
 
 @app.route("/add_to_order", methods=["GET", "POST"])
@@ -152,6 +145,7 @@ def current_orders():
             selling_price = row["selling_price"]
         db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id;")
+        tot = 0
         for row in current:
             sell = row["selling_price"]
             quant = int(quantity)
@@ -163,3 +157,30 @@ def current_orders():
         return render_template("stock_list.html")
 
 
+@app.route("/save_current", methods=["GET", "POST"])
+def save_current():
+    """Show order Page"""
+    if request.method == "POST":
+       #new_order = db.execute("SELECT * FROM current_order;")
+        #for row in new_order:
+           # item_id = row["item_id"]
+           #selling_price = row["selling_price"]
+           # quantity = row ["Quantity"]
+           # order_no = row ["order_number"]
+           # db.execute ("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);", item_id, selling_price, quantity, order_no)
+        return render_template ("orders.html")
+    else:
+        return render_template("orders.html")
+
+
+@app.route("/show_content", methods=["GET", "POST"])
+def show_content():
+    """Show order Page"""
+    if request.method == "POST":
+        order_number = request.form.get("order_no")
+        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?)  ;", order_number)
+        return render_template("order_contents.html",ord_detail = detail, order_number = order_number)
+    else:
+        order_number = request.form.get("order_no")
+        detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)
+        return render_template("order_contents.html",ord_detail = detail)

@@ -26,8 +26,10 @@ Main Screen
                 <td class="text-start">{{ row["Name"] }}</td>
                 <td class="text-start">{{ row["Description"] }}</td>
                 <td class="text-start">{{ row["selling_price"] }}</td>
+                <td class="text-start">{{ row["order_no"] }}</td>
                 <form action="/add_to_order" method="POST">
-                    <td><input type="hidden" name="item_id" VALUE="{{ row['item_id'] }}"></td>   
+                    <td><input type="hidden" name="item_id" VALUE="{{ row['item_id'] }}"></td>                    
+                    <td><input type="hidden" name="order_no" VALUE="{{ order_no }}"></td> 
                     <td class="text-start"><input class="form-control mx-auto w-auto" name ="Quantity" placeholder="Quantity to order" type="number"></td>
                     <td class="text-start"><button class="btn btn-primary" type="submit">Add to Order</button></td>
                 </form>
