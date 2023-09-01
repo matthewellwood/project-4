@@ -145,12 +145,12 @@ def current_orders():
             selling_price = row["selling_price"]
         db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id;")
-        tot = 0
+        tot = float(0.00)
         for row in current:
-            sell = row["selling_price"]
-            quant = int(quantity)
-            total = quant * sell
-            tot += total
+            sell = float(row["selling_price"])
+            quant = float(quantity)
+            total = float(quant * sell)
+            tot += float(total)
         return render_template("current_order.html",current = current,order_number = order_no, total_cost = tot)
     else:
         # do the other
@@ -161,14 +161,13 @@ def current_orders():
 def save_current():
     """Show order Page"""
     if request.method == "POST":
-       #new_order = db.execute("SELECT * FROM current_order;")
-        #for row in new_order:
-           # item_id = row["item_id"]
-           #selling_price = row["selling_price"]
-           # quantity = row ["Quantity"]
-           # order_no = row ["order_number"]
-           # db.execute ("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);", item_id, selling_price, quantity, order_no)
-        return render_template ("open_orders.html")
+        order_no = request.form.get("order_no")
+        total = request.form.get("total_cost")
+        #db.execute("INSERT INTO current_order (order_number, total_cost) VALUES (?, ?);", order_no, total)
+        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total, order_no)
+        totals = db.execute("SELECT order_number, total_cost FROM current_order;")
+        ord_detail=db.execute("select * from orders;")
+        return render_template("open_orders.html", ord_detail = ord_detail)
     else:
         return render_template("orders.html")
 

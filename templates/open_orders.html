@@ -17,9 +17,9 @@ New Order
                 <th class="text-start">Order Date</th>
                 <th class="text-start">Delivery Date</th>
                 <th class="text-start">Total Amount</th>
-
             </tr>
-        </thead>
+      
+    </thead>
         <tbody>
             {% for row in ord_detail %}
             <tr>
@@ -30,7 +30,9 @@ New Order
                 <td class="text-start">{{ row["order_no"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["delivery_date"] }}</td>
-                <td class="text-start">{{ row["total"] }}</td>
+                <td class="text-start">{{ row["balance"] }}</td> 
+                  
+                      
             </tr>
             {% endfor %}
         </tbody>
