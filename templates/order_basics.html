@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Order Details
+{% endblock %}
+
+{% block main %}
+
+<form action="/order_basics" method="post">
+    <div class ="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="completion" placeholder="Approx Completion date" type="text">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="delivery_date" placeholder="Planned Delivery date" type="text">
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+{% endblock %}
+    
