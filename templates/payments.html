@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Payments
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Payments</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Order Number</th>
+                <th class="text-start">Customer First Name</th>
+                <th class="text-start">Customer Last Name</th>
+                <th class="text-start">Total Order Value</th>
+                <th class="text-start">Deposit Paid</th>
+                <th class="text-start">Balance Outstanding</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in payments %}
+            <tr>
+                <form action="payments" method="POST">
+                    <td><input type="hidden" name="order_number" VALUE="{{ row['order_number'] }}"><button class="btn btn-primary" type="submit">Make a Payment</button></td>
+                </form>
+                <td class="text-start">{{ row["order_number"] }}</td>
+                <td class="text-start">{{ row["first_name"] }}</td>
+                <td class="text-start">{{ row["last_name"] }}</td>               
+                <td class="text-start">{{ row["total_cost"] }}</td>
+                <td class="text-start">{{ row["deposit"] }}</td>
+                <td class="text-start">{{ row["balance"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </div>
+</form>
+{% endblock %}
