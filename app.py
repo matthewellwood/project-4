@@ -66,7 +66,8 @@ def open_orders():
         db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_number) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
         return render_template("stock_list.html", order_no = order_no)
     else:
-        ord_detail=db.execute("select * from orders;")
+        ord_detail=db.execute("select * from orders join customers on orders.cust_id = customers.id;")
+        #order_detail = ("select * from customers as c join current_order as co on c.id = co.cust_id join orders as o on o.order_no = co.cust_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
 
 
@@ -143,6 +144,14 @@ def current_orders():
         get_details = db.execute("SELECT selling_price FROM stock WHERE item_id = (?);", item_id)
         for row in get_details:
             selling_price = row["selling_price"]
+        # USE PYTHON TRY ?????
+        check_order = db.execute("SELECT item_id FROM current_order WHERE order_number = (?);", order_no)
+        for row in check_order:
+            item = row["item_id"]
+            #if item_id = item:
+                # UPDATE QUANTITY OF ITEM IN CURRENT ORDER , ELSE INSERT ITEM INTO ORDER
+
+
         db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
@@ -220,3 +229,39 @@ def order_basics():
         return render_template("stock_list.html", last_elem = last_elem)
     else:
         return render_template("order_basics.html") 
+    
+
+@app.route("/new_customer", methods=["GET", "POST"])
+def new_customer():
+    """Show Order Form"""
+    if request.method == "POST":
+        first_name = request.form.get("first_name")
+        last_name = request.form.get("last_name")
+        address_1 = request.form.get("Address_1")
+        address_2 = request.form.get("Address_2")
+        address_3 = request.form.get("Address_3")
+        postcode = request.form.get("Postcode")
+        telephone_1 = request.form.get("Telephone_1")
+        telephone_2 = request.form.get("Telephone_2")
+        db.execute("INSERT INTO customers(first_name, last_name, address_1, address_2, address_3, postcode, telephone_1, telephone_2) VALUES (?,?,?,?,?,?,?,?);", first_name, last_name, address_1, address_2, address_3, postcode, telephone_1, telephone_2 ) 
+        detail = db.execute("select * from customers;")
+        return render_template("list_of_customers.html",detail = detail)
+    if request.method == "GET":
+        return render_template("new_customer.html")
+
+
+@app.route("/payments", methods=["GET", "POST"])
+def payments():
+    """Show Order Form"""
+    if request.method == "POST":
+        order_number = request.form.get("order_no")
+        #payments = db.execute("SELECT * FROM customers AS c JOIN current_order AS co ON c.id = co.cust_id JOIN orders AS o ON o.cust_id = c.id WHERE co.order_number = (?);", order_number)
+        payment2 = db.execute("SELECT * FROM orders WHERE order_no = (?);", order_number)
+        outstanding = float(0.00)
+        for row in payment2:
+            total = row["balance"]
+            paid = row["deposit"]
+            outstanding = (total-paid)
+        return render_template("payments.html", payments = payment2, outstanding = outstanding)
+    else:
+        return render_template("payments.html")

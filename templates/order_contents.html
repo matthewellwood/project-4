@@ -14,25 +14,31 @@ New Order
                 <form action="/stock_list" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
                 </form> 
+                <td class="border-0 fw-bold text-end">Order Number</td>
+                <td class="border-0 fw-bold text-start">{{ order_number }}</td>
+    
+                <td class="border-0 fw-bold text-end" colspan="-4">Total Order Cost</td>
+                <td class="border-0 fw-bold text-start">{{ total_cost }}</td>
+                <td class="border-0 fw-bold text-end" colspan="-4">Delivery Date</td>
+                <td class="border-0 fw-bold text-start">{{ delivery_date }}</td>
+            </tr>
                 <th></th>
                 <th class="text-start">Staff Member</th>
-                <th class="text-start">Order Number</th>
                 <th class="text-start">Order Date</th>
                 <th class="text-start">Quantity</th>
                 <th class="text-start">Name</th>
                 <th class="text-start">Description</th>
-                <th class="text-start">Selling Price</th>
+                <th class="text-start">Price</th>
             </tr>
         </thead>
         <tbody>
             {% for row in ord_detail %}
             <tr>
                 <form action="/stock_list" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Delete Item (to do)</button></td>
+                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
                 </form>
-                <td></td>
+                
                 <td class="text-start">{{ row["staff_member"] }}</td>
-                <td class="text-start">{{ row["order_number"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["Quantity"] }}</td>
                 <td class="text-start">{{ row["Name"] }}</td>

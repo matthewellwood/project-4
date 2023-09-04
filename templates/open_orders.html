@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-New Order
+Current Orders
 {% endblock %}
 
 {% block main %}
@@ -17,7 +17,7 @@ New Order
                 <th class="text-start">Order Number</th>
                 <th class="text-start">Order Date</th>
                 <th class="text-start">Delivery Date</th>
-                <th class="text-start">Total Amount</th>
+                <th class="text-start">Balance Outstanding</th>
             </tr>
       
     </thead>
@@ -26,7 +26,7 @@ New Order
             <tr>
                 <td class="text-start">{{ row["staff_member"] }}</td>
                 <form action="/show_content" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Order Contents</button></td>
+                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Itemised</button></td>
                 </form>
                 <td class="text-start">{{ row["last_name"] }}</td>
                 <td class="text-start">{{ row["order_no"] }}</td>
@@ -34,7 +34,7 @@ New Order
                 <td class="text-start">{{ row["delivery_date"] }}</td>
                 <td class="text-start">{{ row["balance"] }}</td> 
                 <form action="/payments" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Add Payment</button></td>
+                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Make a Payment</button></td>
                 </form>
                       
             </tr>
