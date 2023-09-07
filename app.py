@@ -123,8 +123,8 @@ def order_details():
             item_id = int(float(item))
         item_check = db.execute("SELECT Range, Style, selling_price FROM stock WHERE item_id = (?);", item_id)
         for row in item_check:
-            name = row["Range"]
-            item_description = row["Style"]
+            # name = row["Range"]
+            #item_description = row["Style"]
             selling_price = row["selling_price"]
         db.execute("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_number)
         order_info = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_number)
@@ -150,8 +150,6 @@ def current_orders():
             item = row["item_id"]
             #if item_id = item:
                 # UPDATE QUANTITY OF ITEM IN CURRENT ORDER , ELSE INSERT ITEM INTO ORDER
-
-
         db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
@@ -257,11 +255,27 @@ def payments():
         order_number = request.form.get("order_no")
         #payments = db.execute("SELECT * FROM customers AS c JOIN current_order AS co ON c.id = co.cust_id JOIN orders AS o ON o.cust_id = c.id WHERE co.order_number = (?);", order_number)
         payment2 = db.execute("SELECT * FROM orders WHERE order_no = (?);", order_number)
-        outstanding = float(0.00)
+        #pay3 = db.execute("SELECT * FROM orders JOIN stock ON orders.item_id = stock.item_id WHERE order_number = (?);", order_number)
+        tot = float(0.00)
         for row in payment2:
-            total = row["balance"]
-            paid = row["deposit"]
-            outstanding = (total-paid)
-        return render_template("payments.html", payments = payment2, outstanding = outstanding)
+            balance = float(row["balance"])
+            deposit = float("deposit")
+            total = float(balance - deposit)
+            tot += float(total)
+
+        #outstanding = float(0.00)
+        #for row in payment2:
+         #   total = row["balance"]
+          #  paid = row["deposit"]
+           # outstanding = (total-paid)
+        return render_template("payments.html", payments = payment2, outstanding = tot)
     else:
         return render_template("payments.html")
+    
+
+@app.route("/choose_customer", methods=["GET", "POST"])
+def choose_customer():
+    if request.method == "POST":
+        selection = request.form.get("customer")
+    else:
+        return render_template("choose_customer.html")

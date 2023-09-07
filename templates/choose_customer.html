@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Choose Customer 
+{% endblock %}
+
+{% block main %}
+
+
+<table class="table table-striped">
+    <tr>
+        <form action="/list_of_customers">                    
+            <td><button class="btn btn-primary" type="submit">Select from Current Customers</button></td>
+        </form>
+        <form action="/new_customer">
+            <td><button class="btn btn-primary" type="submit">Create New Customer</button></td>
+        </form> 
+    </tr>
+{% endblock %}
