@@ -145,10 +145,17 @@ def current_orders():
         for row in get_details:
             selling_price = row["selling_price"]
         # USE PYTHON TRY ?????
-        check_order = db.execute("SELECT item_id FROM current_order WHERE order_number = (?);", order_no)
+        order_info = db.execute("SELECT order_id FROM orders;")
+        for row in order_info:
+            new_order_no = row["order_id"]
+            order_no = int(new_order_no)+1
+        check_order = db.execute("SELECT item_id, Quantity FROM current_order WHERE order_number = (?);", order_no)
         for row in check_order:
-            item = row["item_id"]
-            #if item_id = item:
+            item_no = row["item_id"]
+            quant = row["Quantity"]
+            if item_id == item_no:
+                new_quant = quant + quantity
+                db.execute("UPDATE current_order SET Quantity = (?) WHERE item_id = (?) AND order_number = (?);", new_quant, item_id, order_no)
                 # UPDATE QUANTITY OF ITEM IN CURRENT ORDER , ELSE INSERT ITEM INTO ORDER
         db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
@@ -158,7 +165,10 @@ def current_orders():
             quant = float(quantity)
             total = float(quant * sell)
             tot += float(total)
-        return render_template("current_order.html",current = current,order_number = order_no, total_cost = tot)
+        for row in current:
+            line_tot = row["selling_price"] * row["Quantity"]
+
+        return render_template("current_order.html",current = current,order_number = order_no, total_cost = total, line_tot = line_tot)
     else:
         # do the other
         return render_template("stock_list.html")
