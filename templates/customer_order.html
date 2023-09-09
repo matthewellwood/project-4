@@ -5,7 +5,7 @@ Customer Order
 {% endblock %}
 
 {% block main %}
-<form action="/customer_order" method="post">
+<form action="/customer_order" method="POST">
     <div class ="mb-3">
         {% for row in detail %}
             <td><input type="hidden" name="customer_id" VALUE="{{ customer_id }}"></td>
@@ -16,8 +16,6 @@ Customer Order
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="deposit_taken" placeholder="Deposit Taken" type="text">
     </div>
     </div>
-    </form>
-    <form action="/order_basics">
     <button class="btn btn-primary" type="submit">Next</button>
     
 </form>

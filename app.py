@@ -67,8 +67,17 @@ def open_orders():
         return render_template("stock_list.html", order_no = order_no)
     else:
         ord_detail=db.execute("select * from orders join customers on orders.cust_id = customers.id;")
-        #order_detail = ("select * from customers as c join current_order as co on c.id = co.cust_id join orders as o on o.order_no = co.cust_id;")
-        return render_template("open_orders.html", ord_detail = ord_detail)
+        detail = db.execute("select sum(Quantity) AS Quantity, item_id, selling_price, order_number FROM current_order group by item_id;")
+        new_detail = db.execute("select sum(Quantity) AS Quantity, item_id, selling_price, order_number FROM current_order group by item_id, order_number order by order_number;")
+        #for row in detail:
+           # order_num = row["order_number"]
+           # while order_num:
+            #    quant = row["Quantity"]
+            #    price = row["selling_price"]
+           #     total = quant * price
+           #     fin_total = fin_total + total
+           #     db.execute("UPDATE orders SET balance = (?) WHERE order_number = (?);", fin_total, order_num)
+        return render_template("open_orders.html", ord_detail = ord_detail, detail = detail)
 
 
 @app.route("/stock_list", methods=["GET", "POST"])
@@ -144,20 +153,7 @@ def current_orders():
         get_details = db.execute("SELECT selling_price FROM stock WHERE item_id = (?);", item_id)
         for row in get_details:
             selling_price = row["selling_price"]
-        # USE PYTHON TRY ?????
-        order_info = db.execute("SELECT order_id FROM orders;")
-        for row in order_info:
-            new_order_no = row["order_id"]
-            order_no = int(new_order_no)+1
-        check_order = db.execute("SELECT item_id, Quantity FROM current_order WHERE order_number = (?);", order_no)
-        for row in check_order:
-            item_no = row["item_id"]
-            quant = row["Quantity"]
-            if item_id == item_no:
-                new_quant = quant + quantity
-                db.execute("UPDATE current_order SET Quantity = (?) WHERE item_id = (?) AND order_number = (?);", new_quant, item_id, order_no)
-                # UPDATE QUANTITY OF ITEM IN CURRENT ORDER , ELSE INSERT ITEM INTO ORDER
-        db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
+            db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_no)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
         for row in current:
@@ -165,7 +161,6 @@ def current_orders():
             quant = float(quantity)
             total = float(quant * sell)
             tot += float(total)
-        for row in current:
             line_tot = row["selling_price"] * row["Quantity"]
 
         return render_template("current_order.html",current = current,order_number = order_no, total_cost = total, line_tot = line_tot)
@@ -180,9 +175,16 @@ def save_current():
     if request.method == "POST":
         order_no = request.form.get("order_no")
         total = request.form.get("total_cost")
+        current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
+        tot = float(0.00)
+        for row in current:
+            sell = float(row["selling_price"])
+            quant = (row["Quantity"])
+            total = float(quant * sell)
+            tot += float(total)
         db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total, order_no)
         totals = db.execute("SELECT order_number, total_cost FROM current_order;")
-        ord_detail=db.execute("select * from orders;")
+        ord_detail = db.execute("select staff_member, cust_id, last_name, order_id, order_date, completion, delivery_date, balance from orders JOIN customers on orders.cust_id = customers.id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
     else:
         return render_template("orders.html")
@@ -219,10 +221,10 @@ def customer_order():
         order_date = request.form.get("order_date")
         customer_id = request.form.get("customer_id")
         deposit = request.form.get("deposit_taken")
-        #customer = db.execute ("SELECT * FROM customers WHERE id = (?);", customer_id)
         db.execute("INSERT INTO orders(cust_id, staff_member, order_date, deposit) VALUES (?, ?, ?, ?);", customer_id,  staff_member, order_date, deposit)
-        order_info = db.execute("SELECT * FROM orders;")
-        last_elem =order_info[len(order_info)-1]
+        order_info = db.execute("SELECT * FROM orders order by order_id desc limit 1;")
+        for row in order_info:
+            last_elem = row["order_id"]
         return render_template("order_basics.html", last_elem = last_elem)
     else:
         return render_template("customer_order.html")
@@ -232,11 +234,16 @@ def customer_order():
 def order_basics():
     # things to change
     if request.method == "POST":
-        order_info = db.execute("SELECT * FROM orders;")
-        last_elem =order_info[len(order_info)-1]
-        return render_template("stock_list.html", last_elem = last_elem)
+        order_no = request.form.get("order_no")
+        completion = request.form.get("completion")
+        del_date = request.form.get("delivery_date")
+        db.execute("UPDATE orders SET completion = (?), delivery_date = (?) WHERE order_id =(?);", completion, del_date, order_no)
+        return render_template("stock_list.html", order_no = order_no)
     else:
-        return render_template("order_basics.html") 
+        current_order_no = db.execute("SELECT order_id FROM orders ORDER BY order_id desc LIMIT 1;")
+        for row in current_order_no:
+            order_number = (row["order_id"])
+        return render_template("order_basics.html",  order_number = order_number) 
     
 
 @app.route("/new_customer", methods=["GET", "POST"])
