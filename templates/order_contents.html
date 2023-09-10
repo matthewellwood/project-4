@@ -14,11 +14,12 @@ New Order
                 <form action="/stock_list" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
                 </form> 
+                
                 <td class="border-0 fw-bold text-end">Order Number</td>
                 <td class="border-0 fw-bold text-start">{{ order_number }}</td>
     
                 <td class="border-0 fw-bold text-end" colspan="-4">Total Order Cost</td>
-                <td class="border-0 fw-bold text-start">{{ total_cost }}</td>
+                <td class="border-0 fw-bold text-start">{{ total_cost |GBP }}</td>
                 <td class="border-0 fw-bold text-end" colspan="-4">Delivery Date</td>
                 <td class="border-0 fw-bold text-start">{{ delivery_date }}</td>
             </tr>
@@ -43,7 +44,7 @@ New Order
                 <td class="text-start">{{ row["Quantity"] }}</td>
                 <td class="text-start">{{ row["Name"] }}</td>
                 <td class="text-start">{{ row["Description"] }}</td>
-                <td class="text-start">{{ row["selling_price"] |GBP }}</td>                                           
+                <td class="text-start">{{ row["selling_price"]  }}</td>                                           
             </tr>
             {% endfor %}
         </tbody>

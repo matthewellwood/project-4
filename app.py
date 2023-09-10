@@ -66,18 +66,8 @@ def open_orders():
         db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_number) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
         return render_template("stock_list.html", order_no = order_no)
     else:
-        ord_detail=db.execute("select * from orders join customers on orders.cust_id = customers.id;")
-        detail = db.execute("select sum(Quantity) AS Quantity, item_id, selling_price, order_number FROM current_order group by item_id;")
-        new_detail = db.execute("select sum(Quantity) AS Quantity, item_id, selling_price, order_number FROM current_order group by item_id, order_number order by order_number;")
-        #for row in detail:
-           # order_num = row["order_number"]
-           # while order_num:
-            #    quant = row["Quantity"]
-            #    price = row["selling_price"]
-           #     total = quant * price
-           #     fin_total = fin_total + total
-           #     db.execute("UPDATE orders SET balance = (?) WHERE order_number = (?);", fin_total, order_num)
-        return render_template("open_orders.html", ord_detail = ord_detail, detail = detail)
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        return render_template("open_orders.html", ord_detail = ord_detail)
 
 
 @app.route("/stock_list", methods=["GET", "POST"])
@@ -147,6 +137,7 @@ def order_details():
 def current_orders():
     """Show Order Form"""
     if request.method == "POST":
+        order_cost = 0.00
         order_no = request.form.get("order_no")
         item_id = request.form.get("item_id")
         quantity = request.form.get("Quantity")
@@ -162,8 +153,10 @@ def current_orders():
             total = float(quant * sell)
             tot += float(total)
             line_tot = row["selling_price"] * row["Quantity"]
+            order_cost += line_tot
+            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", order_cost, order_no)
 
-        return render_template("current_order.html",current = current,order_number = order_no, total_cost = total, line_tot = line_tot)
+        return render_template("current_order.html",current = current,order_number = order_no, total_cost = order_cost)
     else:
         # do the other
         return render_template("stock_list.html")
@@ -175,16 +168,20 @@ def save_current():
     if request.method == "POST":
         order_no = request.form.get("order_no")
         total = request.form.get("total_cost")
-        current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
+        current = db.execute ("SELECT current_order. item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id")
+        #db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total, order_no)
+        #current = db.execute("SELECT * FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
         for row in current:
             sell = float(row["selling_price"])
             quant = (row["Quantity"])
             total = float(quant * sell)
             tot += float(total)
+            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", tot, order_no)
+        calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
         db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total, order_no)
         totals = db.execute("SELECT order_number, total_cost FROM current_order;")
-        ord_detail = db.execute("select staff_member, cust_id, last_name, order_id, order_date, completion, delivery_date, balance from orders JOIN customers on orders.cust_id = customers.id;")
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
     else:
         return render_template("orders.html")
@@ -196,7 +193,11 @@ def show_content():
     if request.method == "POST":
         order_number = request.form.get("order_no")
         detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?)  ;", order_number)
-        return render_template("order_contents.html",ord_detail = detail, order_number = order_number)
+        #detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        for row in detail:
+            total_cost = row["total_cost"]
+            delivery_date = row["delivery_date"]
+        return render_template("order_contents.html",ord_detail = detail, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date)
     else:
         order_number = request.form.get("order_no")
         detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)
@@ -221,6 +222,7 @@ def customer_order():
         order_date = request.form.get("order_date")
         customer_id = request.form.get("customer_id")
         deposit = request.form.get("deposit_taken")
+        deposit = float(deposit)
         db.execute("INSERT INTO orders(cust_id, staff_member, order_date, deposit) VALUES (?, ?, ?, ?);", customer_id,  staff_member, order_date, deposit)
         order_info = db.execute("SELECT * FROM orders order by order_id desc limit 1;")
         for row in order_info:

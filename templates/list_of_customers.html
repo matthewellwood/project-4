@@ -7,7 +7,7 @@ Customer Details
 {% block main %}
 <div class="section">
 
-    <h2>Customer Details</h2>
+    <h2>Customer  Details</h2>
 
     <table class="table table-striped">
         <thead>
@@ -21,15 +21,15 @@ Customer Details
                 <th class="text-start">Address 3</th>
                 <th class="text-start">Postcode</th>
                 <th></th>
-                <th class="text-end" colspan="8">Telephone</th>
-                <th class="text-end">Telephone 2</th>
+                <th class="text-end" colspan="8">Phone 1</th>
+                <th class="text-end">Phone 2</th>
 
             </tr>
         </thead>
         <tbody>
             {% for row in detail %}
             <tr>
-                <form action="/list_of_customers" method="post">
+                <form action="/list_of_customers" method="POST">
                     <td><input type="hidden" name="customer_id" VALUE="{{ row['id'] }}"><button class="btn btn-primary" type="submit">Create Order</button></td>
                 </form>
                 <td class="text-start">{{ row["id"] }}</td>

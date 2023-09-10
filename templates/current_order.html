@@ -15,7 +15,7 @@ Current Order
                 <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
             </form>
             <form action="/save_current" method="POST">
-                <td><input type="hidden" name="order_no" VALUE="{{ order_no }}">
+                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}">
                     <input type="hidden" name="total_cost" VALUE="{{ total_cost | GBP }}">
                     <button class="btn btn-primary" type="submit">Save Changes</button></td>
             </form>
@@ -36,7 +36,7 @@ Current Order
                     <th class="text-start">Name</th>
                     <th class="text-start">Description</th>
                     <th class="text-start">Cost Each</th>
-                    <th class="text-start">Total Cost</th>
+                    <th class="text-start">Total Line Cost</th>
 
                 </tr>
             </thead>
@@ -47,9 +47,9 @@ Current Order
                     <td class="text-start">{{ row["Quantity"] }}</td>
                     <td class="text-start">{{ row["Name"] }}</td>
                     <td class="text-start">{{ row["Description"] }}</td>
-                    <td class="text-start">{{ row["selling_price"] |GBP }}</td>
-                    <td class="text-start">{{ line_tot | GBP }}</td>
-                    <td class="text-start">{{ total_cost |GBP }}</td>
+                    <td class="text-start">{{ row["selling_price"]  }}</td>
+                    <td class="text-start">{{ (row["Quantity"] * row["selling_price"]) | GBP }}</td>
+                  
                 </tr>
                 {% endfor %}
     </tbody>
