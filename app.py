@@ -167,8 +167,8 @@ def save_current():
     """Show order Page"""
     if request.method == "POST":
         order_no = request.form.get("order_no")
-        total = request.form.get("total_cost")
-        current = db.execute ("SELECT current_order. item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id")
+        total_order_cost = request.form.get("total_cost")
+        current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
         #db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total, order_no)
         #current = db.execute("SELECT * FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
@@ -177,7 +177,7 @@ def save_current():
             quant = (row["Quantity"])
             total = float(quant * sell)
             tot += float(total)
-            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", tot, order_no)
+            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total_order_cost, order_no)
         calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
         db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total, order_no)
         totals = db.execute("SELECT order_number, total_cost FROM current_order;")
@@ -192,8 +192,9 @@ def show_content():
     """Show order Page"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?)  ;", order_number)
-        #detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        #detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?)  ;", order_number)
+        #detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?) GROUP BY order_id;", order_number)
+        detail = db.execute("select orders.staff_member, stock.selling_price, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, current_order.Quantity, stock.Name, stock.Description, current_order.item_id, total_cost from orders JOIN stock ON current_order.item_id = stock.item_id JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?)  GROUP BY order_id;", order_number)
         for row in detail:
             total_cost = row["total_cost"]
             delivery_date = row["delivery_date"]

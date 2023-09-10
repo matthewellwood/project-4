@@ -16,7 +16,7 @@ Current Order
             </form>
             <form action="/save_current" method="POST">
                 <td><input type="hidden" name="order_no" VALUE="{{ order_number }}">
-                    <input type="hidden" name="total_cost" VALUE="{{ total_cost | GBP }}">
+                    <input type="hidden" name="total_cost" VALUE="{{ total_cost }}">
                     <button class="btn btn-primary" type="submit">Save Changes</button></td>
             </form>
             <td class="border-0 fw-bold text-end">Order Number</td>
@@ -31,7 +31,7 @@ Current Order
         <table class="table table-striped">
             <thead>
                 <tr>                
-                    <th class="text-start">Item ID</th>
+                 
                     <th class="text-start">Quantity</th>
                     <th class="text-start">Name</th>
                     <th class="text-start">Description</th>
@@ -43,11 +43,10 @@ Current Order
             <tbody>
                 {% for row in current %}
                 <tr>
-                    <td class="text-start">{{ row["item_id"] }}</td>
                     <td class="text-start">{{ row["Quantity"] }}</td>
                     <td class="text-start">{{ row["Name"] }}</td>
                     <td class="text-start">{{ row["Description"] }}</td>
-                    <td class="text-start">{{ row["selling_price"]  }}</td>
+                    <td class="text-start">{{ row["selling_price"] | GBP }}</td>
                     <td class="text-start">{{ (row["Quantity"] * row["selling_price"]) | GBP }}</td>
                   
                 </tr>
