@@ -17,12 +17,12 @@ New Order
                 <li class="nav-item">
                 <a class="nav-link" href="/open_orders">Back to Current Orders</a>
                 </li>
-                {% for row in ord_detail %}
+             
                 <td class="border-0 fw-bold text-end">Order Number</td>
                 <td class="border-0 fw-bold text-start">{{ order_number }}</td>
                 <td class="border-0 fw-bold text-end" colspan="-4">Customer Name</td>
-                <td class="border-0 fw-bold text-start">{{ row["last_name"] }}</td>               
-                {% endfor %}
+                <td class="border-0 fw-bold text-start">{{ customer_name }}</td>               
+               
             </tr>
             <tr>
                 <td></td>
@@ -40,13 +40,12 @@ New Order
                 <th class="text-start">Price</th>
             </tr>
         </thead>
-        <tbody>
-            {% for row in ord_detail %}
+        <tbody>         
             <tr>
+                {% for row in items %}
                 <form action="/stock_list" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
+                    <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
                 </form>
-                
                 <td class="text-start">{{ row["staff_member"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["Quantity"] }}</td>

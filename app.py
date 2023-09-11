@@ -192,17 +192,19 @@ def show_content():
     """Show order Page"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        #detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?)  ;", order_number)
+        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN customers on current_order.cust_id = customers.id WHERE order_number = (?)  ;", order_number)
         #detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?) GROUP BY order_id;", order_number)
-        detail = db.execute("select orders.staff_member, stock.selling_price, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, current_order.Quantity, stock.Name, stock.Description, current_order.item_id, total_cost from orders JOIN stock ON current_order.item_id = stock.item_id JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?)  GROUP BY order_id;", order_number)
+        #detail = db.execute("select orders.staff_member, stock.selling_price, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, current_order.Quantity, stock.Name, stock.Description, current_order.item_id, total_cost from orders JOIN stock ON current_order.item_id = stock.item_id JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?)  GROUP BY order_id;", order_number)
         for row in detail:
             total_cost = row["total_cost"]
+            customer_name = row["last_name"]
             delivery_date = row["delivery_date"]
-        return render_template("order_contents.html",ord_detail = detail, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date)
+        items = db.execute("select orders.staff_member, orders.order_date, current_order.Quantity,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?);", order_number)
+        return render_template("order_contents.html",ord_detail = detail, customer_name = customer_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
     else:
         order_number = request.form.get("order_no")
         detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)
-        return render_template("order_contents.html",ord_detail = detail)
+        return render_template("order_contents.html",ord_detail = detail, items = items)
     
 @app.route("/list_of_customers", methods=["GET", "POST"])
 def list_of_customers():
