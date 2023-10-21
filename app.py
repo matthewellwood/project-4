@@ -129,7 +129,7 @@ def order_details():
         order_info = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_number)
         return render_template("orders.html",order = order_info)
     else:
-        ord_detail = db.execute("select staff_member, order_id, order_date, completion, orders.selling_price, delivery_date, stock.item_id, orders.item_name, address_3, postcode from orders join customers on orders.cust_id = customers.id join stock on orders.item_name = stock.item_name;")
+        ord_detail = db.execute("select staff_member, order_id, order_date, completion, orders.selling_price, delivery_date, stock.item_id, orders.item_id, address_3, postcode from orders join customers on orders.cust_id = customers.id join stock on orders.item_id = stock.item_id;")
         return render_template("order_contents.html", ord_detail = ord_detail)
     
 
@@ -169,8 +169,6 @@ def save_current():
         order_no = request.form.get("order_no")
         total_order_cost = request.form.get("total_cost")
         current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
-        #db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total, order_no)
-        #current = db.execute("SELECT * FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
         for row in current:
             sell = float(row["selling_price"])
@@ -193,13 +191,14 @@ def show_content():
     if request.method == "POST":
         order_number = request.form.get("order_no")
         detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN customers on current_order.cust_id = customers.id WHERE order_number = (?)  ;", order_number)
-        #detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?) GROUP BY order_id;", order_number)
-        #detail = db.execute("select orders.staff_member, stock.selling_price, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, current_order.Quantity, stock.Name, stock.Description, current_order.item_id, total_cost from orders JOIN stock ON current_order.item_id = stock.item_id JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id WHERE orders.order_id = (?)  GROUP BY order_id;", order_number)
         for row in detail:
             total_cost = row["total_cost"]
             customer_name = row["last_name"]
             delivery_date = row["delivery_date"]
-        items = db.execute("select orders.staff_member, orders.order_date, current_order.Quantity,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?);", order_number)
+        #items = db.execute("select orders.staff_member, orders.order_date, current_order.Quantity,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?);", order_number)
+        items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
+        #for price in items:
+            #line_cost = row["sum(current_order.Quantity)"] * row["stock.selling_price"]
         return render_template("order_contents.html",ord_detail = detail, customer_name = customer_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
     else:
         order_number = request.form.get("order_no")
