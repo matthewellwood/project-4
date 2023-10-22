@@ -8,7 +8,7 @@ Customer Order
 <form action="/customer_order" method="POST">
     <div class ="mb-3">
         {% for row in detail %}
-            <td><input type="hidden" name="customer_id" VALUE="{{ customer_id }}"></td>
+            <td><input placeholder = "Customer Name" name="customer_id" VALUE="{{ customer_id }}" type="text"></td>
         {% endfor %}
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="staff_member" placeholder="Order Taken By" type="text">
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="order_date" placeholder="Order Date" type="text">
