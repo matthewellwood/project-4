@@ -181,7 +181,7 @@ def save_current():
             tot += float(total)
             db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total_order_cost, order_no)
         calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
-        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total, order_no)
+        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", line_total, order_no)
         totals = db.execute("SELECT order_number, total_cost FROM current_order;")
         ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
@@ -201,8 +201,6 @@ def show_content():
             delivery_date = row["delivery_date"]
         #items = db.execute("select orders.staff_member, orders.order_date, current_order.Quantity,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?);", order_number)
         items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
-        #for price in items:
-            #line_cost = row["sum(current_order.Quantity)"] * row["stock.selling_price"]
         return render_template("order_contents.html",ord_detail = detail, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
     else:
         order_number = request.form.get("order_no")

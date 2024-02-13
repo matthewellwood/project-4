@@ -9,18 +9,21 @@ New Order
 
     <h2>Order Contents</h2>
     <table class="table table-striped">
-        <thead>
-            <tr>
-                <form action="/stock_list" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
-                </form> 
-                <li class="nav-item">
-                <a class="nav-link" href="/open_orders">Back to Current Orders</a>
-                </li>
-             
+        <tr>
+            <form action="/open_orders">                    
+                <td><button class="btn btn-primary" type="submit">Back to Current Orders</button></td>
+            </form>
+            <form action="/stock_list" method="POST">
+                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+            </form> 
+            <form action="/stock_list" method="POST">
+                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Delete Order (to do)</button></td>
+            </form> 
+        </tr>
+        <tr>                                       
                 <td class="border-0 fw-bold text-end">Order Number</td>
                 <td class="border-0 fw-bold text-start">{{ order_number }}</td>
-                <td class="border-0 fw-bold text-end" colspan="-4">Customer Name</td>
+                <td class="border-0 fw-bold text-end" colspan="4">Customer Name</td>
                 <td class="border-0 fw-bold text-start">{{ customer_name }}</td>               
                
             </tr>
@@ -38,22 +41,22 @@ New Order
                 <th class="text-start">Item Name</th>
                 <th class="text-start">Item Description</th>
                 <th class="text-start">Price Each</th>
-                <th class="text-start">Total Line Cost</th>
+
             </tr>
         </thead>
         <tbody>         
             <tr>
                 {% for row in items %}
                 <form action="/stock_list" method="POST">
-                    <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Remove(to do)</button></td>
+                    <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
                 </form>
                 <td class="text-start">{{ row["staff_member"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["Quanities"] }}</td>
                 <td class="text-start">{{ row["Name"] }}</td>
                 <td class="text-start">{{ row["Description"] }}</td>
-                <td class="text-start">{{ row["selling_price"] |GBP }}</td>
-                                                   
+                <td class="text-start">{{ row["selling_price"] |GBP }}</td>  
+                       
             </tr>
             {% endfor %}
         </tbody>
