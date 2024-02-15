@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Main Screen
+{% endblock %}
+
+{% block main %}
+<img src= "{{ url_for('static',filename='logo.jpg') }}">
+
+<div class="section">
+   
+  
+    <h2>Alexander Ellis: Orders</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <form action="/open_orders">                    
+                    <td><button class="btn-primary" type="submit">Add Info to Order</button></td>
+                    <td><button class="btn-primary" type="submit">Take a Deposit</button></td>
+                    <td><button class="btn-primary" type="submit">Take Payment</button></td>
+                </form> 
+            </tr>
+        </thead>
+        <tbody>
+                <tr>                 
+                    <form action="/new_customer">                    
+                        <td><button class="btn btn-primary" type="submit">Create a New Customer</button></td>
+                    </form>     
+                    <form action="/list_of_customers">                    
+                        <td><button class="btn btn-primary" type="submit">Select from Current Customers</button></td>
+                    </form>                
+                    <form action="/stock_list">                      
+                        <td><button class="btn btn-primary" type="submit">View Current Stock List</button></td>
+                    </form>                  
+                </tr>
+             
+        </tbody>
+
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+</div>
+{% endblock %}

@@ -34,13 +34,21 @@ def after_request(response):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    """Show Home Page"""
+    """Show Login Page"""
     # get things started
     if request.method == "POST":
-        return render_template ("index.html")
+        return render_template ("home.html")
     else:
         return render_template("index.html")
 
+@app.route("/home", methods=["GET", "POST"])
+def home():
+    """Show Home Page"""
+    # get things started
+    if request.method == "POST":
+        return render_template ("home.html")
+    else:
+        return render_template("home.html")
 
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
@@ -134,7 +142,7 @@ def order_details():
     
 
 @app.route("/add_to_order", methods=["GET", "POST"])
-def current_orders():
+def add_to_order():
     """Show Order Form"""
     if request.method == "POST":
         order_cost = 0.00
