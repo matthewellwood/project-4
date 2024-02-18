@@ -114,31 +114,6 @@ def bedroom():
         else:
             bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
             return render_template("bedroom.html", bedroom = bedroom)
-        
-
-@app.route("/order_details", methods=["GET", "POST"])
-def order_details():
-    """Show Order Form"""
-    if request.method == "POST":
-        # do this
-        order_number = request.form.get("order_number")
-        quant = request.form.get("Quantity")
-        if quant.isdigit():
-            quantity = int(float(quant))
-        item = request.form.get("item")
-        if item.isdigit():
-            item_id = int(float(item))
-        item_check = db.execute("SELECT Range, Style, selling_price FROM stock WHERE item_id = (?);", item_id)
-        for row in item_check:
-            # name = row["Range"]
-            #item_description = row["Style"]
-            selling_price = row["selling_price"]
-        db.execute("INSERT INTO orders (item_id, selling_price, quantity, order_no) VALUES (?, ?, ?, ?);",item_id, selling_price, quantity, order_number)
-        order_info = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_number)
-        return render_template("orders.html",order = order_info)
-    else:
-        ord_detail = db.execute("select staff_member, order_id, order_date, completion, orders.selling_price, delivery_date, stock.item_id, orders.item_id, address_3, postcode from orders join customers on orders.cust_id = customers.id join stock on orders.item_id = stock.item_id;")
-        return render_template("order_contents.html", ord_detail = ord_detail)
     
 
 @app.route("/add_to_order", methods=["GET", "POST"])
@@ -188,9 +163,9 @@ def save_current():
             total = float(quant * sell)
             tot += float(total)
             db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total_order_cost, order_no)
-        calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
-        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", line_total, order_no)
-        totals = db.execute("SELECT order_number, total_cost FROM current_order;")
+        #calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
+        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total_order_cost, order_no)
+        #totals = db.execute("SELECT order_number, total_cost FROM current_order;")
         ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
     else:
@@ -199,15 +174,14 @@ def save_current():
 
 @app.route("/show_content", methods=["GET", "POST"])
 def show_content():
-    """Show order Page"""
+    """Show order contents Page"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN customers on current_order.cust_id = customers.id WHERE order_number = (?)  ;", order_number)
+        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?)  ;", order_number)
         for row in detail:
             total_cost = row["total_cost"]
             last_name = row["last_name"]
             delivery_date = row["delivery_date"]
-        #items = db.execute("select orders.staff_member, orders.order_date, current_order.Quantity,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?);", order_number)
         items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
         return render_template("order_contents.html",ord_detail = detail, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
     else:
@@ -219,7 +193,6 @@ def show_content():
 def list_of_customers():
     if request.method == "POST":
         customer_id = request.form.get("customer_id")
-        
         detail = db.execute("select * from customers WHERE id = (?);", customer_id)
         return render_template("customer_order.html",customer_id = customer_id, detail = detail)
     else:
