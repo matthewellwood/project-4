@@ -65,7 +65,7 @@ def open_orders():
     if request.method == "POST":
         # do this
         order_no = request.form.get("order_no")
-        current = db.execute("SELECT * FROM orders WHERE order_no = (?);", order_no)
+        current = db.execute("SELECT * FROM orders WHERE order_id = (?);", order_no)
         for row in current:
             customer_id = row["cust_id"]
             staff_member = row["staff_member"]
@@ -177,13 +177,15 @@ def show_content():
     """Show order contents Page"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?)  ;", order_number)
+        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id JOIN customers ON customers.id = orders.cust_id WHERE order_number = (?)  ;", order_number)
         for row in detail:
             total_cost = row["total_cost"]
+            first_name = row["first_name"]
             last_name = row["last_name"]
             delivery_date = row["delivery_date"]
+            staff_member = row["staff_member"]
         items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
-        return render_template("order_contents.html",ord_detail = detail, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
+        return render_template("order_contents.html",ord_detail = detail, staff_member = staff_member, customer_first = first_name, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items)
     else:
         order_number = request.form.get("order_no")
         detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)

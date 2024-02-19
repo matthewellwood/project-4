@@ -18,13 +18,16 @@ New Order
             </form> 
             <form action="/stock_list" method="POST">
                 <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Delete Order (to do)</button></td>
+                <td class="border-0 fw-bold text-end">Customer Name</td>
+                <td class="border-0 fw-bold text-end">{{ customer_first }}</td> 
+                <td class="border-0 fw-bold text-start">{{ customer_name }}</td> 
             </form> 
         </tr>
         <tr>                                       
                 <td class="border-0 fw-bold text-end">Order Number</td>
                 <td class="border-0 fw-bold text-start">{{ order_number }}</td>
-                <td class="border-0 fw-bold text-end" colspan="4">Customer Name</td>
-                <td class="border-0 fw-bold text-start">{{ customer_name }}</td>               
+                <td class="border-0 fw-bold text-end">Staff Member</td>
+                <td class="border-0 fw-bold text-end">{{ staff_member }}</td>               
                
             </tr>
             <tr>
