@@ -124,10 +124,10 @@ def add_to_order():
         order_no = request.form.get("order_no")
         item_id = request.form.get("item_id")
         quantity = request.form.get("Quantity")
-        get_cust = db.execute("Select cust_id FROM orders WHERE order_no = (?);", order_no)
+        get_cust = db.execute("Select cust_id FROM orders WHERE order_id = (?);", order_no)
         for cust in get_cust:
             customer_id = cust["cust_id"]
-            db.execute("UPDATE current_order SET cust_id = (?) WHERE order_no = (?);", customer_id, order_no)
+            db.execute("UPDATE current_order SET cust_id = (?) WHERE order_number = (?);", customer_id, order_no)
         get_details = db.execute("SELECT selling_price FROM stock WHERE item_id = (?);", item_id)
         for row in get_details:
             selling_price = row["selling_price"]
@@ -145,7 +145,7 @@ def add_to_order():
 
         return render_template("current_order.html",current = current,order_number = order_no, total_cost = order_cost)
     else:
-        # do the other
+        # If GET 
         return render_template("stock_list.html")
 
 
@@ -157,19 +157,22 @@ def save_current():
         total_order_cost = request.form.get("total_cost")
         current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
         tot = float(0.00)
-        for row in current:
-            sell = float(row["selling_price"])
-            quant = (row["Quantity"])
-            total = float(quant * sell)
-            tot += float(total)
-            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total_order_cost, order_no)
+        #for row in current:
+        #    sell = float(row["selling_price"])
+        #    quant = (row["Quantity"])
+        #    total = float(quant * sell)
+        #    tot += float(total)
+        #    db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", total_order_cost, order_no)
         #calculate = db.execute("SELECT current_order.order_number, orders.deposit, current_order.total_cost from orders JOIN current_order ON orders.order_id = current_order.order_number GROUP BY order_id;")
         db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total_order_cost, order_no)
         #totals = db.execute("SELECT order_number, total_cost FROM current_order;")
         ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
     else:
-        return render_template("orders.html")
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        for name in ord_detail:
+            last_name = name["last_name"]
+        return render_template("orders.html", last_name = last_name)
 
 
 @app.route("/show_content", methods=["GET", "POST"])
@@ -260,24 +263,11 @@ def payments():
     """Show Order Form"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        #payments = db.execute("SELECT * FROM customers AS c JOIN current_order AS co ON c.id = co.cust_id JOIN orders AS o ON o.cust_id = c.id WHERE co.order_number = (?);", order_number)
-        payment2 = db.execute("SELECT * FROM orders WHERE order_no = (?);", order_number)
-        #pay3 = db.execute("SELECT * FROM orders JOIN stock ON orders.item_id = stock.item_id WHERE order_number = (?);", order_number)
-        tot = float(0.00)
-        for row in payment2:
-            balance = float(row["balance"])
-            deposit = float("deposit")
-            total = float(balance - deposit)
-            tot += float(total)
-
-        #outstanding = float(0.00)
-        #for row in payment2:
-         #   total = row["balance"]
-          #  paid = row["deposit"]
-           # outstanding = (total-paid)
-        return render_template("payments.html", payments = payment2, outstanding = tot)
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        return render_template("payments.html", payments =  ord_detail)
     else:
-        return render_template("payments.html")
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        return render_template("payments.html", payments =  ord_detail)
     
 
 @app.route("/choose_customer", methods=["GET", "POST"])

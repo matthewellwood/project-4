@@ -12,7 +12,7 @@ Current Orders
         <thead>
             <tr>
                 <th class="text-start">Staff Member</th>
-                <th></th>
+                <th class="text-start">View</th>
                 <th class="text-start">Customer Last Name</th>
                 <th class="text-start">Order Number</th>
                 <th class="text-start">Order Date</th>
@@ -20,6 +20,7 @@ Current Orders
                 <th class="text-start">Order Value</th>
                 <th class="text-start">Deposit Paid</th>
                 <th class="text-start">Balance Outstanding</th>
+                <th class="text-start"> Make Payment</th>
             </tr>
       
     </thead>
@@ -39,7 +40,7 @@ Current Orders
                 <td class="text-start">{{ (row["total_cost"] - row["deposit"]) |GBP }}</td>
                   
                 <form action="/payments" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_no'] }}"><button class="btn btn-primary" type="submit">Make Payment OR Deposit</button></td>
+                    <td><input type="hidden" name="order_no" VALUE="{{ row['order_id'] }}"><button class="btn btn-primary" type="submit">Pay</button></td>
                 </form>
                 {% endfor %}       
             </tr>

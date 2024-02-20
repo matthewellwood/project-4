@@ -5,50 +5,45 @@ New Order
 {% endblock %}
 
 {% block main %}
-<div class="section">
-
+<div>
     <h2>Order Contents</h2>
-    <table class="table table-striped">
-        <tr>
-            <form action="/open_orders">                    
-                <td><button class="btn btn-primary" type="submit">Back to Current Orders</button></td>
-            </form>
-            <form action="/stock_list" method="POST">
-                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
-            </form> 
-            <form action="/stock_list" method="POST">
-                <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Delete Order (to do)</button></td>
-                <td class="border-0 fw-bold text-end">Customer Name</td>
-                <td class="border-0 fw-bold text-end">{{ customer_first }}</td> 
-                <td class="border-0 fw-bold text-start">{{ customer_name }}</td> 
-            </form> 
-        </tr>
-        <tr>                                       
-                <td class="border-0 fw-bold text-end">Order Number</td>
-                <td class="border-0 fw-bold text-start">{{ order_number }}</td>
-                <td class="border-0 fw-bold text-end">Staff Member</td>
-                <td class="border-0 fw-bold text-end">{{ staff_member }}</td>               
-               
-            </tr>
+    <tr>
+        <table class="table">
+        <form action="/open_orders">                    
+            <td><button class="btn btn-primary" type="submit">Back to Current Orders</button></td>
+        </form>
+        <form action="/stock_list" method="POST">
+            <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
+        </form> 
+        <form action="/stock_list" method="POST">
+            <td colspan="2"><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Delete Order (to do)</button></td>
+        </form>
+    </tr>
+    <tr>
+        <td class="border-0 fw-bold text-center">Customer Name {{ customer_first }} {{ customer_name }}</td>
+        <td class="border-0 fw-bold text-center">Staff Member {{ staff_member }}</td>
+    </tr>
+    <tr>
+        <td class="border-0 fw-bold text-center">Order Number {{ order_number }}</td>
+        <td class="border-0 fw-bold text-center">Total Order Cost {{ total_cost |GBP }}</td>
+        <td class="border-0 fw-bold text-center">Delivery Date {{ delivery_date }}</td>
+    </tr>
+</table>
+<tr></tr>
+</div>
+    <table>
+        <tbody>         
             <tr>
-                <td></td>
-                <td class="border-0 fw-bold text-end" colspan="-4">Total Order Cost</td>
-                <td class="border-0 fw-bold text-start">{{ total_cost |GBP }}</td>
-                <td class="border-0 fw-bold text-end" colspan="-4">Delivery Date</td>
-                <td class="border-0 fw-bold text-start">{{ delivery_date }}</td>
-            </tr>
-                <th></th>
-                <th class="text-start">Staff Member</th>
+                <table class="table table-striped">
+                    <tr>
+                        <th></th>
+                <th class="text-center">Staff Member</th>
                 <th class="text-start">Order Date</th>
                 <th class="text-start">Quantity</th>
                 <th class="text-start">Item Name</th>
                 <th class="text-start">Item Description</th>
                 <th class="text-start">Price Each</th>
-
-            </tr>
-        </thead>
-        <tbody>         
-            <tr>
+                    </tr>
                 {% for row in items %}
                 <form action="/stock_list" method="POST">
                     <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
@@ -59,9 +54,10 @@ New Order
                 <td class="text-start">{{ row["Name"] }}</td>
                 <td class="text-start">{{ row["Description"] }}</td>
                 <td class="text-start">{{ row["selling_price"] |GBP }}</td>  
-                       
+                
             </tr>
             {% endfor %}
+        </table> 
         </tbody>
     </table>
 </div>
