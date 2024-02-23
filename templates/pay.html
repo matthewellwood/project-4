@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Payments
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Make a payment</h2>
+
+    <table class="table table-striped">
+        <tbody>
+            <form action="/" method="post">
+                <div class="mb-3">
+                    <div class="row my-custom-row justify-content-center align-items-center">             
+                        <div class="col-sm-4"><div class="p-4 border bg-light">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="paid_amount" placeholder="Amount Paid" type="text">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="paydate" placeholder="Payment Date" type="text">
+                        </div>
+                        <input type ="hidden" name="order_no" VALUE="{{ order_no }}"><button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </tbody>
+
+
+
+
+
+{% endblock %}

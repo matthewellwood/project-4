@@ -8,8 +8,6 @@ Current Order
 <h2>Current Order</h2>
 <table Class = "table table-striped">
     <thead>
-            <tr>
-
         <tr>
             <form action="/stock_list" method="post">
                 <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
@@ -25,7 +23,7 @@ Current Order
             <td class="border-0 fw-bold text-end" colspan="-4">Total Order Cost</td>
             <td class="border-0 fw-bold text-start">{{ total_cost | GBP }}</td>
 
->
+
         </tr>
     </thead>
     <tbody>
