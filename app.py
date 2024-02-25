@@ -74,7 +74,7 @@ def open_orders():
         db.execute("INSERT INTO current_order(cust_id, staff_member, order_date, item_id, order_number) VALUES (?, ?, ?, ?, ?);", customer_id,  staff_member, order_date, item_id, order_no)
         return render_template("stock_list.html", order_no = order_no)
     else:
-        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        ord_detail = db.execute("select orders.staff_member, orders.cust_id, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = ord_detail)
 
 
@@ -269,7 +269,41 @@ def pay():
     """Show Payments screen"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        return render_template("pay.html", order_no = order_number)
+        name = db.execute("select first_name, last_name from customers join current_order on current_order.cust_id = customers.id where current_order.order_number = (?);",order_number)
+        for row in name:
+            first_name = (row["first_name"])
+            last_name = (row["last_name"])
+        return render_template("pay.html", order_number = order_number, first_name = first_name, last_name = last_name )
+    else:
+        order_number = request.form.get("order_no")
+        return render_template("pay.html", order_number = order_number)
+
+@app.route("/paid", methods =["GET","POST"])
+def paid():
+    if request.method == "POST":
+        order_number = request.form.get("order_no")
+        amount_paid = request.form.get("paid_amount")
+        paid_date = request.form.get("paid_date")
+        check = db.execute("SELECT * FROM payments")
+        #for row in check:
+            #order_check = (row["order_number"])
+        if order_number in check:
+            db.execute("INSERT INTO payments (amount_paid, date_paid) VALUES (?, ?) WHERE order_number = (?);", amount_paid, paid_date, order_number)
+        else:
+            db.execute("INSERT INTO payments (amount_paid, date_paid, order_number) VALUES (?, ?, ?);", amount_paid, paid_date, order_number)
+        taken=db.execute("select payments.order_number, payments.amount_paid, payments.date_paid, current_order.total_cost, orders.deposit from payments join current_order on current_order.order_number=payments.order_number JOIN orders on orders.order_id = payments.order_number JOIN customers on orders.cust_id = customers.id GROUP BY date_paid;")
+        #taken=db.execute("SELECT orders.staff_member, payments.amount_paid, orders.order_no, orders.cust_id, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN payments ON current_order.order_number = payments.order_number JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        return render_template("payments_taken.html", taken = taken)
+    else:
+        #taken=db.execute("select payments.order_number as order_no, payments.amount_paid, payments.date_paid from payments join current_order on current_order.order_number=payments.order_number;")
+        #taken=db.execute("SELECT orders.staff_member, payments.amount_paid, orders.cust_id, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN payments ON current_order.order_number = payments.order_number JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        return render_template("payments_taken.html", taken = taken)
+
+
+        
+        
+
+
 
 
 @app.route("/choose_customer", methods=["GET", "POST"])

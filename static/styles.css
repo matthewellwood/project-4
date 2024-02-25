@@ -2,6 +2,13 @@
 nav .navbar-brand
 {
     font-size: xx-large;
+    color: #0000ff;
+    font-weight: bold;
+}
+
+nav .navbar-brand .green
+{
+    color: #00ff1e;
 }
 
 /* Colors for brand */

@@ -7,16 +7,24 @@ Payments
 {% block main %}
 <div class="section">
 
-    <h2>Make a payment</h2>
+    <h2>Make a payment to </h2>
+    <form>
+        <tr>
+            <td class="border-0 fw-bold text-center"><h2>Order Number {{ order_number }}</h2></td>
+            <td class="border-0 fw-bold text-center"><h6>for Customer {{ first_name }} {{ last_name }}</h6></td>
+        </tr>
+    </form>
+    
 
     <table class="table table-striped">
         <tbody>
-            <form action="/" method="post">
+            <form action="/paid" method="post">
                 <div class="mb-3">
                     <div class="row my-custom-row justify-content-center align-items-center">             
                         <div class="col-sm-4"><div class="p-4 border bg-light">
+                            <input type="hidden" name="order_no" VALUE="{{ order_number }}">
                             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="paid_amount" placeholder="Amount Paid" type="text">
-                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="paydate" placeholder="Payment Date" type="text">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="paid_date" placeholder="Payment Date" type="text">
                         </div>
                         <input type ="hidden" name="order_no" VALUE="{{ order_no }}"><button class="btn btn-primary" type="submit">Submit</button>
                         </div>
