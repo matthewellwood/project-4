@@ -39,6 +39,14 @@ def index():
     if request.method == "POST":
         return render_template ("home.html")
     else:
+      #      """Log user in"""
+    # Forget any user_id
+    #session.clear()
+    # User reached route via POST (as by submitting a form via POST)
+    #if request.method == "POST":
+        # Ensure username was submitted
+      #  if not request.form.get("name"):
+          #  return apology("must provide username", 403)
         return render_template("index.html")
 
 @app.route("/home", methods=["GET", "POST"])
@@ -291,13 +299,30 @@ def paid():
             db.execute("INSERT INTO payments (amount_paid, date_paid) VALUES (?, ?) WHERE order_number = (?);", amount_paid, paid_date, order_number)
         else:
             db.execute("INSERT INTO payments (amount_paid, date_paid, order_number) VALUES (?, ?, ?);", amount_paid, paid_date, order_number)
-        taken=db.execute("select payments.order_number, payments.amount_paid, payments.date_paid, current_order.total_cost, orders.deposit from payments join current_order on current_order.order_number=payments.order_number JOIN orders on orders.order_id = payments.order_number JOIN customers on orders.cust_id = customers.id GROUP BY date_paid;")
-        #taken=db.execute("SELECT orders.staff_member, payments.amount_paid, orders.order_no, orders.cust_id, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN payments ON current_order.order_number = payments.order_number JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
-        return render_template("payments_taken.html", taken = taken)
+        taken=db.execute("select payments.amount_paid, payments.date_paid, current_order.total_cost, orders.deposit from payments join current_order on current_order.order_number=payments.order_number JOIN orders on orders.order_id = payments.order_number JOIN customers on orders.cust_id = customers.id WHERE payments.order_number = (?) GROUP BY date_paid;", order_number)
+        for row in taken:
+            total_cost = (row["total_cost"])
+        payments=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_number)
+        totals=db.execute("SELECT SUM(payments.amount_paid) AS total_paid, orders.deposit, current_order.total_cost from payments JOIN current_order ON current_order.order_number=payments.order_number JOIN orders ON orders.order_id = payments.order_number where payments.order_number=(?);", order_number)
+        for row in payments:
+            total_paid = (row["tot_paid"])
+        return render_template("payments_taken.html", payments = payments, totals = totals, total_cost = total_cost, order_number = order_number, total_paid = total_paid)
     else:
         #taken=db.execute("select payments.order_number as order_no, payments.amount_paid, payments.date_paid from payments join current_order on current_order.order_number=payments.order_number;")
         #taken=db.execute("SELECT orders.staff_member, payments.amount_paid, orders.cust_id, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN payments ON current_order.order_number = payments.order_number JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
-        return render_template("payments_taken.html", taken = taken)
+        return render_template("payments_taken.html")
+
+
+@app.route("/itemised_payments", methods =["GET","POST"])
+def itemised_payments():
+    if request.method == "POST":
+        order_number = request.form.get("order_no")
+        paid=db.execute("select id, date_paid, amount_paid FROM payments WHERE order_number = (?);", order_number)
+        totals=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_number)
+        for row in totals:
+            total_paid = (row["tot_paid"])              
+        return render_template("itemised_payments.html", paid = paid, order_number = order_number, total_paid = total_paid)
+    
 
 
         

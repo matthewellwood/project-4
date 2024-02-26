@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}
+Itemised Payments
+{% endblock %}
+
+{% block main %}
+<div class="section">
+    <h2>Itemised Payments Taken For</h2>
+    <h2>Order Number <td class="text-start">{{ order_number }}</td></h2>
+    <div class="section">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center">Payment ID</th>
+                    <th class="text-center">Payment Date</th>
+                    <th class="text-center">Amount Paid</th>
+                </tr>
+        </thead>
+        <tbody>
+            {% for row in paid %}
+            <tr>
+                <td class="text-center">{{ row["id"] }}</td>   
+                <td class="text-center">{{ row["date_paid"] }}</td>
+                <td class="text-center">{{ row["amount_paid"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="2">Total Paid</td>
+                <td class="border-0 text-start">{{ total_paid | GBP }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

@@ -6,29 +6,22 @@ Payments Taken
 {% block main %}
 <div class="section">
 
-    <h2>Payments Taken</h2>
+    <h2>Payments Taken For</h2>
     <div class="section">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="text-start">Order Number</th>
-                    <th class="text-start">Payment Date</th>
-                    <th class="text-start">Order Value</th>
-                    <th class="text-start">Deposit Paid</th>
-                    <th class="text-start">Amount Paid</th>
-                    <th class="text-start">Balance Outstanding</th>
-                </tr>
-        </thead>
-        <tbody>
-            {% for row in taken %}
+        <h2>Order Number <td class="text-start">{{ order_number }}</td></h2>
+        <h3>Order Value {{ total_cost | GBP }}</h3>
+        <form action="/itemised_payments" method="POST">
+            <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Itemised</button></td>
+        </form>
+        <table class="table">
+        <tfoot>
+            {% for row in totals %}
             <tr>
-                <td class="text-start">{{ row["order_number"] }}</td>
-                <td class="text-start">{{ row["date_paid"] }}</td>
-                <td class="text-start">{{ row["total_cost"] |GBP }}</td>    
-                <td class="text-start">{{ row["deposit"] |GBP }}</td>
-                <td class="text-start">{{ row["amount_paid"] |GBP}}</td>
-                <td class="text-start">{{ (row["total_cost"] - row["deposit"] - row["amount_paid"] ) |GBP }}</td>
+                <tr></tr>
+                <td class="border-0 fw-bold text-center">Deposit {{ row["deposit"] | GBP }}</td>
+                <td class="border-0 fw-bold text-center">Amount Paid {{ total_paid | GBP }}</td>
+                <td class="border-0 fw-bold text-center">Balance To Pay {{ (row["total_cost"] - row["deposit"] - total_paid ) |GBP }}</td>
             </tr>
-            {% endfor %}  
-        </tbody>
+            {% endfor %}
+        </tfoot>
 {% endblock %}
