@@ -21,6 +21,7 @@ Current Orders
                 <th class="text-start">Order Value</th>
                 <th class="text-start">Deposit Paid</th>
                 <th class="text-start">Balance Outstanding</th>
+                <th class="text-start"> Amount Paid</th>
                 <th class="text-start"> Make Payment</th>
             </tr>
     </thead>
@@ -37,8 +38,9 @@ Current Orders
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["delivery_date"] }}</td>
                 <td class="text-start">{{ row["total_cost"] |GBP }}</td>    
-                <td class="text-start">{{ row["deposit"] |GBP }}</td>
-                <td class="text-start">{{ (row["total_cost"] - row["deposit"]) |GBP }}</td>
+                <td class="text-start">{{ row["deposit"] |GBP }}</td> 
+                <td class="text-start">{{ row["balance"] }}</td>
+                
                 
                   
                 <form action="/pay" method="POST">

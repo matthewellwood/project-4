@@ -4,6 +4,7 @@ nav .navbar-brand
     font-size: xx-large;
     color: #0000ff;
     font-weight: bold;
+    
 }
 
 nav .navbar-brand .green
@@ -31,13 +32,14 @@ nav .navbar-brand .green
 
 .wrapper{
 	width: 1000px;
-	background-color: rgb(255,255,255);
+    background-color: #0000ff;
 	margin: 0 auto;
 }
 
 ul.site-navigation {
 	text-align: center;
     list-style: none;
+    
 }
 
 ul.site-navigation li a{
@@ -52,8 +54,9 @@ ul.site-navigation li a{
     -moz-transition:.5s;
     -webkit-transition:.5s;
     transition:.5s;
-	color: rgb(82,82,82);
+	color: #0000ff;
 	border-bottom: 3px solid transparent;
+   
 }
 
 ul.site-navigation > li {
@@ -61,6 +64,7 @@ ul.site-navigation > li {
     width: 125px;
     float:left;
     margin: 0;
+    
 }
 
 ul.site-navigation a:hover{
@@ -68,6 +72,7 @@ ul.site-navigation a:hover{
 	border-bottom: 3px solid rgb(4,141,195);
 	text-shadow: rgb(200, 200, 200) 1px 1px 0px;
 	padding: 97px 0 0 0;
+    
 }
 
 ul.site-navigation ul {
@@ -77,16 +82,19 @@ ul.site-navigation ul {
      z-index: 1000;
     padding: 0;
     display: none;
+    
 }
 
 ul.site-navigation ul li {
      float: none;
      line-height: 50px;
+    
  }
 
 ul.site-navigation ul li a {
      font-weight: regular;
      font-size: 20px;
+    
  }
 
 ul.site-navigation li:hover ul {
@@ -95,5 +103,9 @@ ul.site-navigation li:hover ul {
     width: 125px;
     top: 100%;
     left: 0;
+    
 
 }
+
+
+
