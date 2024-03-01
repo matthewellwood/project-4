@@ -13,6 +13,10 @@ Payments Taken
         <form action="/itemised_payments" method="POST">
             <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Itemised</button></td>
         </form>
+        <form action="/open_orders">  
+            <td></td>                  
+            <td><button class="btn btn-primary" type="submit">Back to Current Orders</button></td>
+        </form>
         <table class="table">
         <tfoot>
             {% for row in totals %}

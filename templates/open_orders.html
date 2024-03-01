@@ -13,15 +13,14 @@ Current Orders
             <tr>
                 <th class="text-start">Staff Member</th>
                 <th class="text-start">View Contents</th>
-                <th class="text-start">Customer</th>
-                <th class="text-start">Name</th>
+                <th class="text-start">Customer Name</th>
                 <th class="text-start">Order Number</th>
                 <th class="text-start">Order Date</th>
                 <th class="text-start">Delivery Date</th>
                 <th class="text-start">Order Value</th>
                 <th class="text-start">Deposit Paid</th>
-                <th class="text-start">Balance Outstanding</th>
                 <th class="text-start"> Amount Paid</th>
+                <th class="text-start">Balance Outstanding</th>
                 <th class="text-start"> Make Payment</th>
             </tr>
     </thead>
@@ -32,17 +31,15 @@ Current Orders
                 <form action="/show_content" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ row['order_id'] }}"><button class="btn btn-primary" type="submit">Itemised</button></td>
                 </form>
-                <td class="text-start">{{ row["first_name"] }}</td>
-                <td class="text-start">{{ row["last_name"] }}</td>
+                <td class="text-start">{{ row["first_name"] }} {{ row["last_name"] }}</td>
                 <td class="text-start">{{ row["order_id"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["delivery_date"] }}</td>
                 <td class="text-start">{{ row["total_cost"] |GBP }}</td>    
                 <td class="text-start">{{ row["deposit"] |GBP }}</td> 
-                <td class="text-start">{{ row["balance"] }}</td>
-                
-                
-                  
+                <td class="text-start">{{ row["amount_paid"] |GBP }}</td>
+                <td class="text-start">{{ row["balance"] |GBP }}</td>
+                    
                 <form action="/pay" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ row['order_id'] }}"><button class="btn btn-primary" type="submit">Pay</button></td>
                 </form>
