@@ -4,20 +4,23 @@ nav .navbar-brand
     font-size: xx-large;
     color: #0000ff;
     font-weight: bold;
-    
 }
 
-nav .navbar-brand .green
+nav .navbar-brand.green
 {
     color: #00ff1e;
 }
 
+nav .navbar-brand.black
+{
+    color: #0c0d0c;
+}
 /* Colors for brand */
 nav .navbar-brand .blue
 {
     color: #537fbe;
 }
-nav .navbar-brand .red
+nav.navbar-brand.red
 {
     color: #ea433b;
 }
@@ -27,7 +30,7 @@ nav .navbar-brand .yellow
 }
 nav .navbar-brand .green
 {
-    color: #2e944b;
+    color: #eb9f52;
 }
 
 .wrapper{
@@ -69,8 +72,8 @@ ul.site-navigation > li {
 
 ul.site-navigation a:hover{
 	font-weight: bold;
-	border-bottom: 3px solid rgb(4,141,195);
-	text-shadow: rgb(200, 200, 200) 1px 1px 0px;
+	border-bottom: 3px solid rgb(74, 4, 195);
+	text-shadow: rgb(116, 6, 141) 1px 1px 0px;
 	padding: 97px 0 0 0;
     
 }

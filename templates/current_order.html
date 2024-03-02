@@ -36,7 +36,6 @@ Current Order
                     <th class="text-start">Description</th>
                     <th class="text-start">Cost Each</th>
                     <th class="text-start">Total Line Cost</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +46,6 @@ Current Order
                     <td class="text-start">{{ row["Description"] }}</td>
                     <td class="text-start">{{ row["selling_price"] | GBP }}</td>
                     <td class="text-start">{{ (row["Quantity"] * row["selling_price"]) | GBP }}</td>
-                  
                 </tr>
                 {% endfor %}
     </tbody>

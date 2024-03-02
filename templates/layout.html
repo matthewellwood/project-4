@@ -19,18 +19,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <li class="nav-item"><a class="nav-link" href="/new_customer">Create New Customer</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/choose_customer">Create New Order</a></li>
+                    <li class="nav-link"><a button type="button" class="btn btn-success" href="/new_customer">Create New Customer</a></li>
+                    <li class="nav-link"><a button type="button" class="btn btn-success" href="/choose_customer">Create New Order</a></li>
                 </li>
                 <li class="nav-item">
-                  <li class="nav-item"><a class="nav-link" href="/list_of_customers">Current Customers</a></li>
-             
-                  <a class="nav-link" href="/open_orders">Current Orders</a>  
+                  <li class="nav-link"><a button type="button" class="btn btn-warning" href="/list_of_customers">Current Customers</a></li>
+                  <li class="nav-link"><a button type="button" class="btn btn-warning" href="/open_orders">Current Orders</a>  
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Completed Orders
-                    </a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Completed Orders</a>
                     <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Delivery</a></li>
                     <li><a class="dropdown-item" href="#">Collection</a></li>
@@ -38,14 +35,7 @@
                     <li><a class="dropdown-item" href="#">Collected</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                </li>
                 </ul>
-                <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Last Name" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
             <a class="navbar-brand" href="/">Login</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

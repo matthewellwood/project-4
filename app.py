@@ -95,8 +95,8 @@ def open_orders():
             amount_paid = (row["amount_paid"])
             total_cost = (row["total_cost"])
             deposit = (row["deposit"])
-            bal = total_cost - deposit
-            balance = bal - amount_paid
+            #bal = total_cost - deposit
+            balance = total_cost - deposit- amount_paid
             db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", balance, order_id)
         finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = finals)
@@ -159,15 +159,11 @@ def add_to_order():
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
         tot = float(0.00)
         for row in current:
-            if (row["amount_paid"]) == "None":
-                db.execute(~"INSERT INTO current_order (amount_paid) VALUES (?);", 0)
-           # else:
-            #    db.execute(~"INSERT INTO current_order (amount_paid) VALUES (?);", amount_paid)
             sell = float(row["selling_price"])
-            quant = float(quantity)
-            total = float(quant * sell)
-            tot += float(total)
-            line_tot = row["selling_price"] * row["Quantity"]
+            quant = int(quantity)
+            total = (quant * sell)
+            tot += (total)
+            line_tot = (quant * sell)
             order_cost += line_tot
             db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", order_cost, order_no)
         return render_template("current_order.html",current = current,order_number = order_no, total_cost = order_cost)
@@ -184,8 +180,7 @@ def save_current():
         total_order_cost = request.form.get("total_cost")
         current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
         tot = float(0.00)
-        db.execute("UPDATE orders SET balance = (?) WHERE order_no =(?);", total_order_cost, order_no)
-        #ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+        db.execute("UPDATE orders SET balance = (?) WHERE order_id =(?);", total_order_cost, order_no)
         totals=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_no)
         for row in totals:
             total_paid = (row["tot_paid"]) 
@@ -238,7 +233,7 @@ def customer_order():
         order_date = request.form.get("order_date")
         deposit = request.form.get("deposit_taken")
         deposit = float(deposit)
-        db.execute("INSERT INTO orders(cust_id, staff_member, order_date, deposit) VALUES (?, ?, ?, ?);", customer_id,  staff_member, order_date, deposit)
+        db.execute("INSERT INTO orders(cust_id, staff_member, order_date, deposit, amount_paid) VALUES (?, ?, ?, ?, 0);", customer_id,  staff_member, order_date, deposit)
         order_info = db.execute("SELECT * FROM orders order by order_id desc limit 1;")
         for row in order_info:
             last_elem = row["order_id"]

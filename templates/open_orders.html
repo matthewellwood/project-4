@@ -38,7 +38,8 @@ Current Orders
                 <td class="text-start">{{ row["total_cost"] |GBP }}</td>    
                 <td class="text-start">{{ row["deposit"] |GBP }}</td> 
                 <td class="text-start">{{ row["amount_paid"] |GBP }}</td>
-                <td class="text-start">{{ row["balance"] |GBP }}</td>
+                <td class="text-start">{{ (row["total_cost"] - row["deposit"] - row["amount_paid"]) |GBP}}</td>
+           
                     
                 <form action="/pay" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ row['order_id'] }}"><button class="btn btn-primary" type="submit">Pay</button></td>

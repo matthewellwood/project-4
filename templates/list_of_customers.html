@@ -20,9 +20,8 @@ Customer Details
                 <th class="text-start">Address 2</th>
                 <th class="text-start">Address 3</th>
                 <th class="text-start">Postcode</th>
-                <th></th>
-                <th class="text-end" colspan="8">Phone 1</th>
-                <th class="text-end">Phone 2</th>
+                <th class="text-start">Telephone</th>
+            
 
             </tr>
         </thead>
@@ -32,16 +31,14 @@ Customer Details
                 <form action="/list_of_customers" method="POST">
                     <td><input type="hidden" name="customer_id" VALUE="{{ row['id'] }}"><button class="btn btn-primary" type="submit">Create Order</button></td>
                 </form>
-                <td class="text-start">{{ row["id"] }}</td>
+                <td class="text-center">{{ row["id"] }}</td>
                 <td class="text-start">{{ row["first_name"] }}</td>
                 <td class="text-start">{{ row["last_name"] }}</td>
                 <td class="text-start">{{ row["address_1"] }}</td>
                 <td class="text-start">{{ row["address_2"] }}</td>
                 <td class="text-start">{{ row["address_3"] }}</td>
                 <td class="text-start">{{ row["postcode"] }}</td>
-                <td></td>
-                <td class="text-end" colspan="8">{{ row["telephone_1"] }}</td>
-                <td class="text-end">{{ row["telephone_2"] }}</td>
+                <td class="text-start">{{ row["telephone_1"] }} {{ row["telephone_2"] }}</td>
                 </tr>
             {% endfor %}
         </tbody>
