@@ -106,9 +106,134 @@ ul.site-navigation li:hover ul {
     width: 125px;
     top: 100%;
     left: 0;
-    
-
 }
 
+  .background-stock {
+    background-image: url("bedroomsmall.jpg"), url("BuckinghamRoombetterstill.jpg");
+    background-position: left top, right top;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 50%;
+}
 
+    .background-home {
+        background-image: url("showroom-interior-1.jpg");
+        background-repeat: no-repeat;
+        background-position: top;
+    }
 
+    .background-login {
+        background-image: url("Harrogate_Bedroom.jpg");
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100%;
+    }
+
+    .background-current-customers {
+        background-image: url("customers.jpg");
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100%;
+    }
+
+    .titles-colour{
+        font-size: xx-large;
+        color: #c3ff00;
+        font-weight: bold;
+    }
+
+    .titles-colour-deep{
+        font-size: xx-large;
+        color: #f60505;
+        font-weight: bold;
+    }
+
+    .lounge-button {
+        background-color: blue;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 80px;
+        right : 100px;
+      }
+
+      .bedroom-button {
+        background-color: blue;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 80px;
+        left : 100px;
+      }
+
+      .left-button {
+        background-color: blue;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 210px;
+        left : 100px;
+      }
+
+      .right-button {
+        background-color: blue;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 210px;
+        right : 100px;
+      }
+
+      .middle-button {
+        background-color: blue;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 210px;
+        right : 480px;
+      }
+
+      .cust-left-button {
+        background-color: rgb(255, 0, 0);
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 110px;
+        left : 100px;
+      }
+
+      .cust-right-button {
+        background-color: rgb(255, 0, 0);
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top : 110px;
+        right : 100px;
+      }

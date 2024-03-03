@@ -5,24 +5,23 @@ Stock Selector
 {% endblock %}
 
 {% block main %}
-<div class="section">
-
-    <h2>Current Stock</h2>
-    <table class="table table-striped">
-        <thead>
-            <div id="nav">
-                <form action="/lounge" method="POST">
-                    <td><input type="hidden" name="order_no" VALUE="{{ order_no }}"></td>
-                    <td><button class="btn btn-primary" type="submit">Lounge Furniture</button></td>
-                </form>
-
+<div>
+    <link href="/static/styles.css" rel="stylesheet">
+        <body class="background-stock"> 
+            <table>
                 <form action="/bedroom" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ order_no }}">
-                    <td><button class="btn btn-primary" type="submit">Bedroom Collection</button></td>
-                </form>
-                    <li><a href="#">New Items to Order in</a></li>  
-            </div>
-        </thead>
-    </table>
+                    <td><button class="bedroom-button" type="submit">Bedroom Collection</button></td>
+                </form> 
+                <td></td>
+            <form action="/lounge" method="POST">
+                <td><input type="hidden" name="order_no" VALUE="{{ order_no }}"></td>
+                <td><button  class="lounge-button" type="submit">Lounge Furniture</button></td>
+            </form>
+            <h2 class ="titles-colour">Current Stock</h2>
+            
+            </table>
+        </body>
+            
 </div>
 {% endblock %}

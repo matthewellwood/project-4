@@ -7,13 +7,13 @@ Choose Customer
 {% block main %}
 
 
-<table class="table table-striped">
+<body class="background-current-customers"> 
     <tr>
         <form action="/list_of_customers">                    
-            <td><button class="btn btn-primary" type="submit">Select from Current Customers</button></td>
+            <td><button class="cust-left-button" type="submit">Select from Current Customers</button></td>
         </form>
         <form action="/new_customer">
-            <td><button class="btn btn-primary" type="submit">Create New Customer</button></td>
+            <td><button class="cust-right-button" type="submit">Create New Customer</button></td>
         </form> 
     </tr>
 {% endblock %}
