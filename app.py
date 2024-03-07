@@ -178,8 +178,8 @@ def save_current():
     if request.method == "POST":
         order_no = request.form.get("order_no")
         total_order_cost = request.form.get("total_cost")
-        current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
-        tot = float(0.00)
+        #current = db.execute ("SELECT current_order.item_id, stock.selling_price, current_order.Quantity FROM current_order JOIN orders on current_order.order_number = orders.order_id JOIN stock ON current_order.item_id = stock.item_id;")
+        #tot = float(0.00)
         db.execute("UPDATE orders SET balance = (?) WHERE order_id =(?);", total_order_cost, order_no)
         totals=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_no)
         for row in totals:
@@ -294,7 +294,7 @@ def pay():
     """Show Payments screen"""
     if request.method == "POST":
         order_number = request.form.get("order_no")
-        name = db.execute("select first_name, last_name from customers join current_order on current_order.cust_id = customers.id where current_order.order_number = (?);",order_number)
+        name = db.execute("SELECT first_name, last_name FROM customers JOIN orders on orders.cust_id = customers.id where orders.order_id = (?);", order_number)
         for row in name:
             first_name = (row["first_name"])
             last_name = (row["last_name"])
