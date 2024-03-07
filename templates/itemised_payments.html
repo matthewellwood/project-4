@@ -25,7 +25,7 @@ Itemised Payments
             <tr>
                 <td class="text-center">{{ row["id"] }}</td>   
                 <td class="text-center">{{ row["date_paid"] }}</td>
-                <td class="text-center">{{ row["amount_paid"] }}</td>
+                <td class="text-center">{{ row["amount_paid"]  |GBP }}</td>
             </tr>
             {% endfor %}
         </tbody>
