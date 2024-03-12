@@ -4,7 +4,7 @@ from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
-from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from extras import apology, login_required, GBP
 
@@ -36,18 +36,38 @@ def after_request(response):
 def index():
     """Show Login Page"""
     # get things started
-    if request.method == "POST":
-        return render_template ("home.html")
-    else:
-      #      """Log user in"""
-    # Forget any user_id
-    #session.clear()
-    # User reached route via POST (as by submitting a form via POST)
     #if request.method == "POST":
-        # Ensure username was submitted
-      #  if not request.form.get("name"):
-          #  return apology("must provide username", 403)
+        #return render_template ("home.html")
+    #else:
+    """Log user in"""
+    #Forget any user_id
+    session.clear()
+    #User reached route via POST 
+    if request.method == "POST":
+        # Get username 
+        user = request.form.get("name")
+        # Get a Password
+        password = request.form.get("password")
+        # Check Username is Valid
+        valid = db.execute("SELECT * from USERS where username = (?);", user)
+        for row in valid:
+            pass_check = row["password"]
+        # Check username exists and password is correct
+            answer= "Wrong"
+            if password == pass_check:
+                answer = "Correct"
+            if answer == "Correct":
+                return render_template("home.html")
+            #return render_template("test.html", answer=answer, pass_check=pass_check, password=password, user=user)
+            #return render_template("test.html", pass_check=pass_check, password=password)
+            #return render_template("home.html")
+            #else:
+                #return render_template("test.html", pass_check=pass_check, password=password)
+                #return render_template("home.html")  
+            return render_template("test.html", answer=answer, valid=valid, password=password, user=user)
+    else:
         return render_template("index.html")
+
 
 @app.route("/home", methods=["GET", "POST"])
 def home():

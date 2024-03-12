@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Main Screen
+{% endblock %}
+
+{% block main %}
+
+
+<div class="section">
+    <h2 class ="titles-colour-deep">Alexander Ellis Error System</h2>
+    <h2 class ="titles-colour-deep">From the Staff Login Page</h2>
+<table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Username</th>
+                <th class="text-start">Pass Check from SQL</th>
+                <th class="text-start">Password given</th>
+                <th class="text-start">Answer</th>
+      
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-start">{{ user }}</td>
+                <td class="text-start">{{ pass_check }}</td>
+                <td class="text-start">{{ password }}</td>
+                <td class="text-start">{{ answer }}</td>
+            </tr>
+            <tr>
+        </tbody>
+  
+</table>
+
+</div>
+{% endblock %}
