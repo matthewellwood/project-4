@@ -58,13 +58,8 @@ def index():
                 answer = "Correct"
             if answer == "Correct":
                 return render_template("home.html")
-            #return render_template("test.html", answer=answer, pass_check=pass_check, password=password, user=user)
-            #return render_template("test.html", pass_check=pass_check, password=password)
-            #return render_template("home.html")
-            #else:
-                #return render_template("test.html", pass_check=pass_check, password=password)
-                #return render_template("home.html")  
-            return render_template("test.html", answer=answer, valid=valid, password=password, user=user)
+            else:
+                return render_template("test.html", pass_check=pass_check,  answer=answer, valid=valid, password=password, user=user)
     else:
         return render_template("index.html")
 
