@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Main Screen
+{% endblock %}
+
+{% block main %}
+
+
+<div class="section">
+    <h2 class ="titles-colour-deep">Alexander Ellis Staff Register System</h2>
+    <table class="table table-striped">
+        <tbody>
+             <form action="/register" method="post">
+                    <body class="background-login">
+                        <div class="row my-custom-row justify-content-center align-items-center">
+                            <div class="col-sm-4">
+                                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="name" placeholder="Name" type="text">
+                                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="password" placeholder="Password" type="text">
+                            </div>
+                        </div>
+                    </div>
+            <button class="btn btn-primary" type="submit">Submit</button>            
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}

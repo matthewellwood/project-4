@@ -1,10 +1,29 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Apology
+Password Incorrect
 {% endblock %}
 
 {% block main %}
-<h2>Must Enter Valid Username and Password</h2>
-<img src= "{{ url_for('static',filename='error-angle-2.jpg') }}">
+
+<div class="container">
+    <div class="image">
+        <img src= "{{ url_for('static',filename='error-angle-2.jpg') }}">
+    </div>
+    <div class="text">
+        <form action="/register" method="GET">
+            <td><button class="btn btn-primary" type="submit">Register again</button></td>
+        </form>
+        <h2 class ="titles-colour-deep">That name is already in use, Please choose another</h2>
+        <tbody>
+            <tr>
+                <td class="text-center", style="color:rgb(199, 1, 51)">{{ username }}</td> 
+            </tr>
+        </tbody>
+        
+    </div>
+
+    
+</div>
+
 {% endblock %}

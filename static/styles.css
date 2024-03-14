@@ -237,3 +237,37 @@ ul.site-navigation li:hover ul {
         top : 110px;
         right : 100px;
       }
+
+
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .img {
+        max-width: 25%;
+        max-height: 15%;
+        float: left;
+      }
+
+
+      .text {
+        font-size: 20px;
+        padding-left: 20px;
+        padding-top: 5%;
+        float: left;
+      }
+
+
+      .split-right {
+        font-size: 20px;
+        padding-right: 20px;
+        padding-top: 5%;
+        float: right;
+      }
+
+
+      .p {
+        color: #00ff1e;
+    }

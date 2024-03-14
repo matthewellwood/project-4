@@ -52,16 +52,40 @@ def index():
         valid = db.execute("SELECT * from USERS where username = (?);", user)
         for row in valid:
             pass_check = row["password"]
-        # Check username exists and password is correct
-            answer= "Wrong"
-            if password == pass_check:
-                answer = "Correct"
-            if answer == "Correct":
-                return render_template("home.html")
-            else:
-                return render_template("test.html", pass_check=pass_check,  answer=answer, valid=valid, password=password, user=user)
+            name = row["username"]
+            if name == user:
+                answer= "Wrong"
+                # Check password is correct
+                if password == pass_check:
+                    answer = "Correct"
+                if answer == "Correct":
+                    return render_template("home.html")
+                else:
+                    return render_template("password_wrong.html", pass_check=pass_check,  answer=answer, valid=valid, password=password, user=user)
+        else:
+            return render_template("username_wrong.html",user=user)     
     else:
         return render_template("index.html")
+    
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method =="GET":
+        return render_template ("register.html")
+    else:
+        #Get user to input a name
+        username = request.form.get("name")
+        current_users = db.execute("SELECT username FROM users;")
+        #check that name is not already registereed
+        for user in current_users:
+            used_name = user["username"]
+            if username == used_name:
+                return render_template("apology.html", username=username)
+        #User to create a password
+        password = request.form.get("password")
+        db.execute("INSERT INTO users (username, password) VALUES (?, ?);", username, password)
+        return render_template("home.html")
+
 
 
 @app.route("/home", methods=["GET", "POST"])
