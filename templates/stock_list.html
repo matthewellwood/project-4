@@ -11,11 +11,13 @@ Stock Selector
             <table>
                 <form action="/bedroom" method="POST">
                     <td><input type="hidden" name="order_no" VALUE="{{ order_no }}">
+                    <td><input type="hidden" name="user" VALUE="{{ user }}"></td>
                     <td><button class="bedroom-button" type="submit">Bedroom Collection</button></td>
                 </form> 
                 <td></td>
             <form action="/lounge" method="POST">
                 <td><input type="hidden" name="order_no" VALUE="{{ order_no }}"></td>
+                <td><input type="hidden" name="user" VALUE="{{ user }}"></td>
                 <td><button  class="lounge-button" type="submit">Lounge Furniture</button></td>
             </form>
             <h2 class ="titles-colour">Current Stock</h2>

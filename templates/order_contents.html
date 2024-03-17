@@ -13,6 +13,7 @@ New Order
             <td><button class="btn btn-primary" type="submit">Back to Current Orders</button></td>
         </form>
         <form action="/stock_list" method="POST">
+            <td><input type="hidden" name="user" VALUE="{{ user }}"></td>  
             <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
         </form> 
         <form action="/stock_list" method="POST">

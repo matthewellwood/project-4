@@ -10,13 +10,16 @@ Main Screen
 <img src= "{{ url_for('static',filename='logo.jpg') }}">
     <h2 class ="titles-colour">Alexander Ellis: Orders</h2>
         <tbody>
-                <form action="/open_orders">                    
+                <form action="/open_orders">
+                    <td><input type="hidden" name="user" VALUE="{{ user }}"></td>                     
                     <td><button class="left-button" type="submit">Add Info to Order</button></td>
                 </form>
                 <form action="/payments"> 
+                    <td><input type="hidden" name="user" VALUE="{{ user }}"></td>   
                     <td><button class="middle-button" type="submit">Take a Payment</button></td>
                 </form>                             
-                <form action="/stock_list">                      
+                <form action="/stock_list">
+                    <td><input type="hidden" name="user" VALUE="{{ user }}"></td>                         
                     <td><button class="right-button" type="submit">View Current Stock Lists</button></td>
                 </form>                  
             </tr>  
