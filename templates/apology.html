@@ -14,13 +14,8 @@ Password Incorrect
         <form action="/register" method="GET">
             <td><button class="btn btn-primary" type="submit">Register again</button></td>
         </form>
-        <h2 class ="titles-colour-deep">That name is already in use, Please choose another</h2>
-        <tbody>
-            <tr>
-                <td class="text-center", style="color:rgb(199, 1, 51)">{{ username }}</td> 
-            </tr>
-        </tbody>
-        
+        <h2 class ="titles-colour-deep">The name "{{ username }}" is already in use, Please choose another</h2>
+        <tbody>        
     </div>
 
     

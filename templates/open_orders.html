@@ -29,7 +29,6 @@ Current Orders
             <tr>
                 <td class="text-start">{{ row["staff_member"] }}</td>
                 <form action="/show_content" method="POST">
-                    <td><input type="hidden" name="user" VALUE="{{ user }}"></td>   
                     <td><input type="hidden" name="order_no" VALUE="{{ row['order_id'] }}"><button class="btn btn-primary" type="submit">Itemised</button></td>
                 </form>
                 <td class="text-start">{{ row["first_name"] }} {{ row["last_name"] }}</td>

@@ -34,14 +34,11 @@ def after_request(response):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Show Login Page"""
-    # get things started
-    #if request.method == "POST":
-        #return render_template ("home.html")
-    #else:
-    """Log user in"""
-    #Forget any user_id
+
+    #Forget any user
     session.clear()
+    """Show Login Page"""
+    """Log user in"""
     #User reached route via POST 
     if request.method == "POST":
         # Get username 
@@ -59,6 +56,7 @@ def login():
                 if password == pass_check:
                     answer = "Correct"
                 if answer == "Correct":
+                    session["user"] = user
                     return render_template("home.html", user = user)
                 else:
                     return render_template("password_wrong.html", pass_check=pass_check,  answer=answer, valid=valid, password=password, user=user)
@@ -84,7 +82,7 @@ def register():
         #User to create a password
         password = request.form.get("password")
         db.execute("INSERT INTO users (username, password) VALUES (?, ?);", username, password)
-        return render_template("home.html")
+        return render_template("login.html")
 
 
 
@@ -95,7 +93,27 @@ def index():
     if request.method == "POST":
         return render_template ("home.html")
     else:
-        return render_template("home.html")
+        return render_template("start.html")
+
+
+@app.route("/home", methods=["GET", "POST"])
+def home():
+    """Show Home Page"""
+    # get things started
+    return render_template ("home.html")
+
+    
+
+@app.route("/start", methods=["GET", "POST"])
+def start():
+    """Show Home Page"""
+    # get things started
+    session.clear()
+    if request.method == "POST":
+        return render_template ("home.html")
+    else:
+        return render_template("start.html")
+    
 
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
@@ -137,15 +155,20 @@ def open_orders():
             deposit = (row["deposit"])
             balance = total_cost - deposit- amount_paid
             db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", balance, order_id)
+        #user_name = session ["user"]
         finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = finals, user = user)
 
 
-@app.route("/stock_list", methods=["POST"])
+@app.route("/stock_list", methods=["GET", "POST"])
 def stock_list():
-    order_no = request.form.get("order_no")
-    user = request.form.get("user")
-    return render_template("stock_list.html",order_no = order_no, user=user)
+    if request.method == "POST":
+            order_no = request.form.get("order_no")
+            user = request.form.get("user")
+            return render_template("stock_list.html",order_no = order_no, user=user)
+    else:
+         return render_template("stock_list.html")
+
 
 
 @app.route("/lounge", methods=["GET", "POST"])

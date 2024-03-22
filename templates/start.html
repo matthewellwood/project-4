@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Main Screen
+{% endblock %}
+{% block navbar %} {% endblock %}
+{% block main %}
+
+
+<div class="section">
+    <body class="background-login">
+    <h2 class ="titles-colour-deep">Alexander Ellis Staff System</h2>
+    <table class="table table-striped">
+        <table>
+            <form action="/login" method="GET">
+                <td><button class="bedroom-button" type="submit">Login</button></td>
+            </form> 
+            <td></td>
+        <form action="/register" method="GET">
+            <td><button  class="lounge-button" type="submit">Register User</button></td>
+        </form>
+      
+        
+        </table>           
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
