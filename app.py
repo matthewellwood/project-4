@@ -34,15 +34,14 @@ def after_request(response):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
-    #Forget any user
-    session.clear()
     """Show Login Page"""
     """Log user in"""
     #User reached route via POST 
     if request.method == "POST":
+        #Forget any user
+        session.clear()
         # Get username 
-        user = request.form.get("name")
+        user = request.form.get("username")
         # Get a Password
         password = request.form.get("password")
         # Check Username is Valid
@@ -51,20 +50,32 @@ def login():
             pass_check = row["password"]
             name = row["username"]
             if name == user:
-                answer= "Wrong"
+                #pass_answer= "Wrong"
                 # Check password is correct
                 if password == pass_check:
-                    answer = "Correct"
-                if answer == "Correct":
+                    #pass_answer = "Correct"
+                #if pass_answer == "Correct":
                     session["user"] = user
-                    return render_template("home.html", user = user)
+                    return render_template("user.html",user=user)
                 else:
-                    return render_template("password_wrong.html", pass_check=pass_check,  answer=answer, valid=valid, password=password, user=user)
+                    return render_template("password_wrong.html", password=password, user=user)
+            else:
+                return render_template("username_wrong.html",user=user) 
         else:
-            return render_template("username_wrong.html",user=user)     
+                return render_template("username_wrong.html",user=user)    
     else:
-        return render_template("index.html")
+        return render_template("login.html")
     
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("start")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -72,8 +83,8 @@ def register():
         return render_template ("register.html")
     else:
         #Get user to input a name
-        username = request.form.get("name")
-        current_users = db.execute("SELECT username FROM users;")
+        username = request.form.get("username")
+        current_users = db.execute("SELECT username FROM users);")
         #check that name is not already registereed
         for user in current_users:
             used_name = user["username"]
@@ -90,18 +101,29 @@ def register():
 def index():
     """Show Home Page"""
     # get things started
-    if request.method == "POST":
-        return render_template ("home.html")
+    if "user" in session:
+        user = session["user"]
+        return render_template ("home.html", user = user)
     else:
-        return render_template("start.html")
+        return render_template("login.html")
 
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
     """Show Home Page"""
-    # get things started
-    return render_template ("home.html")
+    if "user" in session:
+        user = session["user"]
+        # get things started
+        return render_template ("home.html", user = user)
 
+
+@app.route("/user", methods=["GET", "POST"])
+def user():
+    """Show Home Page"""
+    if "user" in session:
+        user = session["user"]
+        # get things started
+        return render_template ("home.html", user = user)
     
 
 @app.route("/start", methods=["GET", "POST"])
@@ -165,11 +187,21 @@ def stock_list():
     if request.method == "POST":
             order_no = request.form.get("order_no")
             user = request.form.get("user")
-            return render_template("stock_list.html",order_no = order_no, user=user)
+            if not order_no:
+                return render_template("stock_list.html")
+            else:
+                return render_template("stock_list.html",order_no = order_no, user=user)
     else:
          return render_template("stock_list.html")
 
 
+@app.route("/view_stock_list", methods=["GET", "POST"])
+def view_stock_list():
+    if request.method == "POST":
+            return render_template("view_stock_list.html")
+    else:
+         return render_template("view_stock_list.html")
+    
 
 @app.route("/lounge", methods=["GET", "POST"])
 def lounge():
@@ -184,6 +216,11 @@ def lounge():
             lounge = db.execute("SELECT * FROM stock WHERE Range = 'lounge' ;")
             return render_template("lounge.html", lounge = lounge)
 
+@app.route("/view_lounge", methods=["POST"])
+def view_lounge():
+            lounge = db.execute("SELECT * FROM stock WHERE Range = 'lounge' ;")
+            return render_template("view_lounge.html", lounge = lounge)
+
 
 @app.route("/bedroom", methods=["GET", "POST"])
 def bedroom():
@@ -195,7 +232,14 @@ def bedroom():
         else:
             bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
             return render_template("bedroom.html", bedroom = bedroom)
-    
+  
+@app.route("/view_bedroom", methods=["GET", "POST"])
+def view_bedroom():
+        if request.method == "POST":
+        # do this
+            bedroom = db.execute("SELECT * FROM stock WHERE Range = 'Bedroom' ;")
+            return render_template("view_bedroom.html", bedroom = bedroom)
+
 
 @app.route("/add_to_order", methods=["GET", "POST"])
 def add_to_order():
@@ -274,9 +318,10 @@ def show_content():
 @app.route("/list_of_customers", methods=["GET", "POST"])
 def list_of_customers():
     if request.method == "POST":
+        user = session["user"]
         customer_id = request.form.get("customer_id")
         detail = db.execute("select * from customers WHERE id = (?);", customer_id)
-        return render_template("customer_order.html",customer_id = customer_id, detail = detail)
+        return render_template("customer_order.html",customer_id = customer_id, detail = detail, user = user)
     else:
         detail = db.execute("select * from customers;")
         return render_template("list_of_customers.html",detail = detail)

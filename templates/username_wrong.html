@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Username Incorrect
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="image">
+        <img src= "{{ url_for('static',filename='error-angle-2.jpg') }}">
+    </div>
+    <div class="text">
+        <form action="/" method="GET">
+            <td><button class="btn btn-primary" type="submit">Login again</button></td>
+        </form>
+        <h2 class ="titles-colour-deep">Must Enter a Valid Username</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-left", style="color:rgb(221, 50, 7)">In-Correct Username given</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">{{ user }}</td> 
+                </tr>
+            </tbody>  
+        </table>
+    </div>
+
+    
+</div>
+
+{% endblock %}

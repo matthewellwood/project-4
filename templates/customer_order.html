@@ -10,7 +10,7 @@ Customer Order
         {% for row in detail %}
             <td><input placeholder = "Customer Name" name="customer_id" VALUE="{{ customer_id }}" type="hidden"></td>
         {% endfor %}
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="staff_member" placeholder="Order Taken By" type="text">
+        <td><input placeholder = "staff_member" name="staff_member" VALUE="{{ user }}" type="hidden"></td>
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="order_date" placeholder="Order Date" type="text">
     <div class ="mb-3">
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="deposit_taken" placeholder="Deposit Taken" type="text">

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+View Lounge
+{% endblock %}
+
+{% block main %}
+<div class="section">
+
+    <h2>Current Stock of Lounge furniture</h2>
+    <form action="/stock_list">                     
+        <td><button class="btn btn-primary" type="submit">Back</button></td>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Range</th>
+                <th class="text-start">Name</th>
+                <th class="text-start">Description</th>
+                <th class="text-start">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in lounge %}
+            <tr>
+                <td class="text-start">{{ row["Range"] }}</td>
+                <td class="text-start">{{ row["Name"] }}</td>
+                <td class="text-start">{{ row["Description"] }}</td>
+                <td class="text-start">{{ row["selling_price"] |GBP }}</td>
+            </tr> 
+            {% endfor %}
+        </tbody>
+    </div>
+</form>
+
+
+{% endblock %}

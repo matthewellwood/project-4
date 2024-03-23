@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+View Stock Lists
+{% endblock %}
+
+{% block main %}
+<div>
+    <link href="/static/styles.css" rel="stylesheet">
+        <body class="background-stock"> 
+            <table>
+                <form action="/view_bedroom" method="POST">
+                    <td><button class="bedroom-button" type="submit">Bedroom Collection</button></td>
+                </form> 
+                <td></td>
+            <form action="/view_lounge" method="POST">
+                <td><button  class="lounge-button" type="submit">Lounge Furniture</button></td>
+            </form>
+            <h2 class ="titles-colour">Current Stock</h2>
+            
+            </table>
+        </body>
+            
+</div>
+{% endblock %}
