@@ -310,9 +310,16 @@ def show_content():
         items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
         return render_template("order_contents.html",ord_detail = detail, staff_member = staff_member, customer_first = first_name, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items, user = user)
     else:
-        order_number = request.form.get("order_no")
-        detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)
-        return render_template("order_contents.html",ord_detail = detail, items = items)
+        user = request.form.get("user")
+        detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id JOIN customers ON customers.id = orders.cust_id WHERE order_number = (?)  ;", order_number)
+        for row in detail:
+            total_cost = row["total_cost"]
+            first_name = row["first_name"]
+            last_name = row["last_name"]
+            delivery_date = row["delivery_date"]
+            staff_member = row["staff_member"]
+        items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
+        return render_template("order_contents.html",ord_detail = detail, staff_member = staff_member, customer_first = first_name, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items, user = user)
     
 
 @app.route("/list_of_customers", methods=["GET", "POST"])
@@ -413,8 +420,6 @@ def paid():
         amount_paid = request.form.get("paid_amount")
         paid_date = request.form.get("paid_date")
         check = db.execute("SELECT * FROM payments")
-        #for row in check:
-            #order_check = (row["order_number"])
         if order_number in check:
             db.execute("INSERT INTO payments (amount_paid, date_paid) VALUES (?, ?) WHERE order_number = (?);", amount_paid, paid_date, order_number)
         else:
@@ -448,3 +453,54 @@ def choose_customer():
         selection = request.form.get("customer")
     else:
         return render_template("choose_customer.html")
+
+
+@app.route("/cancel_order", methods=["GET", "POST"])
+def cancel_order():
+        """Show order contents Page"""
+        if request.method == "POST":
+            order_number = request.form.get("order_no")
+            user = session["user"]
+            detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id JOIN customers ON customers.id = orders.cust_id WHERE order_number = (?)  ;", order_number)
+            for row in detail:
+                total_cost = row["total_cost"]
+                first_name = row["first_name"]
+                last_name = row["last_name"]
+                delivery_date = row["delivery_date"]
+                staff_member = row["staff_member"]
+            items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
+            return render_template("cancel_order.html",ord_detail = detail, staff_member = staff_member, customer_first = first_name, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items, user = user)
+        else:
+            order_number = request.form.get("order_no")
+            detail = db.execute("SELECT * FROM current_order WHERE order_number = (?);", order_number)
+            return render_template("order_contents.html",ord_detail = detail, items = items)
+
+
+@app.route("/cancel", methods=["GET", "POST"])
+def cancel():
+        """Show order contents Page"""
+        if request.method == "POST":
+            order_number = request.form.get("order_no")
+            db.execute("DELETE FROM current_order WHERE order_number = (?)  ;", order_number)
+            return render_template("home.html")
+
+
+
+@app.route("/remove_item", methods=["GET", "POST"])
+def remove_item():
+    if request.method == "POST":
+        item_id = request.form.get("item_id")
+        order_no = request.form.get("order_no")
+        remove = int(request.form.get("remove"))
+        to_remove = db.execute("select * from (select * from current_order where order_number = (?)) where item_id = (?);", order_no, item_id,)
+        for row in to_remove:
+            quantity = row["Quantity"]
+            item_to_change = row["item_id"]
+            if quantity > 1:
+                new_quant = quantity - remove
+                db.execute("UPDATE current_order SET Quantity = (?) WHERE item_id = (?) AND order_number = (?);", new_quant, item_to_change, order_no)
+            else:
+                new_quant = 0
+                db.execute("DELETE FROM current_order WHERE item_id = (?) AND order_number = (?);", item_to_change, order_no)
+        return render_template("home.html")
+  

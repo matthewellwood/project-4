@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+New Order
+{% endblock %}
+
+{% block main %}
+<div>
+    <h2 class ="titles-colour-deep">Confirm Cancelation in full of this order</h2>
+    <h2 class ="titles-colour-deep">Cancelation of an Order CANNOT be undone !!!!</h2>
+    <tr>
+        <table class="table">
+        <form action="/open_orders">                    
+            <td><button class="button_green" type="submit">Back to Current Orders</button></td>
+        </form>
+        <form action="/cancel" method="POST">
+            <td colspan="2"><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="button_red" type="submit">Cancel Complete Order</button></td>
+        </form>
+    </tr>
+    <tr>
+        <td class="border-0 fw-bold text-center">Customer Name {{ customer_first }} {{ customer_name }}</td>
+        <td class="border-0 fw-bold text-center">Staff Member {{ staff_member }}</td>
+        <td class="border-0 fw-bold text-center">Current User {{ user }}</td>
+    </tr>
+    <tr>
+        <td class="border-0 fw-bold text-center">Order Number {{ order_number }}</td>
+        <td class="border-0 fw-bold text-center">Total Order Cost {{ total_cost |GBP }}</td>
+        <td class="border-0 fw-bold text-center">Delivery Date {{ delivery_date }}</td>
+    </tr>
+</table>
+<tr></tr>
+</div>
+    <table>
+        <tbody>         
+            <tr>
+                <table class="table table-striped">
+                <th class="text-start">Staff Member</th>
+                <th class="text-start">Order Date</th>
+                <th class="text-start">Quantity</th>
+                <th class="text-start">Item Name</th>
+                <th class="text-start">Item Description</th>
+                <th class="text-start">Price Each</th>
+            </tr>
+            
+                {% for row in items %}
+                <td class="text-start">{{ row["staff_member"] }}</td>
+                <td class="text-start">{{ row["order_date"] }}</td>
+                <td class="text-start">{{ row["Quanities"] }}</td>
+                <td class="text-start">{{ row["Name"] }}</td>
+                <td class="text-start">{{ row["Description"] }}</td>
+                <td class="text-start">{{ row["selling_price"] |GBP }}</td>  
+                </tr>
+            {% endfor %}
+        
+        </tbody>
+    </table>
+</div>
+{% endblock %}

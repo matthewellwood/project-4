@@ -16,8 +16,8 @@ New Order
             <td><input type="hidden" name="user" VALUE="{{ user }}"></td>  
             <td><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Add to Order</button></td>
         </form> 
-        <form action="/stock_list" method="POST">
-            <td colspan="2"><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Cancel Order (to do)</button></td>
+        <form action="/cancel_order" method="POST">
+            <td colspan="2"><input type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-danger" type="submit">Cancel Order</button></td>
         </form>
     </tr>
     <tr>
@@ -38,27 +38,29 @@ New Order
                 <table class="table table-striped">
                     <tr>
                         <th></th>
-                <th class="text-center">Staff Member</th>
-                <th class="text-start">Order Date</th>
-                <th class="text-start">Quantity</th>
-                <th class="text-start">Item Name</th>
-                <th class="text-start">Item Description</th>
-                <th class="text-start">Price Each</th>
+                        <th class="text-center">Quantity to Remove</th>
+                        <th></th>
+                        <th class="text-center">Staff Member</th>
+                        <th class="text-start">Order Date</th>
+                        <th class="text-start">Quantity</th>
+                        <th class="text-start">Item Name</th>
+                        <th class="text-start">Item Description</th>
+                        <th class="text-start">Price Each</th>
                     </tr>
                 {% for row in items %}
-                <form action="/stock_list" method="POST">
-                    <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-primary" type="submit">Remove Item (to do)</button></td>
+                <form action="/remove_item" method="POST">
+                    <td><input type="hidden" name="item_id" VALUE='{{ row["item_id"] }}'></td>
+                    <td class="text-start"><input class="form-control mx-auto w-auto" name ="remove" placeholder="Number" type="number"></td>
+                    <td><input  type="hidden" name="order_no" VALUE="{{ order_number }}"><button class="btn btn-danger" type="submit">Remove Item</button></td>
                 </form>
-                <td class="text-start">{{ row["staff_member"] }}</td>
+                <td class="text-center">{{ row["staff_member"] }}</td>
                 <td class="text-start">{{ row["order_date"] }}</td>
                 <td class="text-start">{{ row["Quanities"] }}</td>
                 <td class="text-start">{{ row["Name"] }}</td>
                 <td class="text-start">{{ row["Description"] }}</td>
                 <td class="text-start">{{ row["selling_price"] |GBP }}</td>  
-                
-            </tr>
+                </tr>
             {% endfor %}
-        </table> 
         </tbody>
     </table>
 </div>
