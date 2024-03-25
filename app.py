@@ -310,6 +310,7 @@ def show_content():
         items = db.execute("select orders.staff_member, orders.order_date, sum(current_order.Quantity) AS Quanities,current_order.item_id, Name, Description, stock.selling_price FROM current_order JOIN stock on current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id WHERE order_number = (?) group by stock.item_id;", order_number)
         return render_template("order_contents.html",ord_detail = detail, staff_member = staff_member, customer_first = first_name, customer_name = last_name, order_number = order_number,total_cost = total_cost, delivery_date = delivery_date, items = items, user = user)
     else:
+        order_number = request.form.get("order_no")
         user = request.form.get("user")
         detail = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id JOIN orders ON current_order.order_number = orders.order_id JOIN customers ON customers.id = orders.cust_id WHERE order_number = (?)  ;", order_number)
         for row in detail:
@@ -502,5 +503,14 @@ def remove_item():
             else:
                 new_quant = 0
                 db.execute("DELETE FROM current_order WHERE item_id = (?) AND order_number = (?);", item_to_change, order_no)
+            new = db.execute("select * from current_order where order_number = (?);", order_no)
+            new_total = 0
+            for row in new:
+                quantity = row["Quantity"]
+                price = row["selling_price"]
+                line_cost = quantity * price
+                new_total += line_cost
+            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", new_total, order_no )
+            db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", new_total, order_no )
         return render_template("home.html")
   
