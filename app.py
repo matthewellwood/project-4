@@ -65,10 +65,8 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
     # Forget any user_id
     session.clear()
-
     # Redirect user to login form
     return redirect("start")
 
@@ -144,7 +142,6 @@ def orders():
 
 @app.route("/open_orders", methods=["GET", "POST"])
 def open_orders():
-    # do this
     if request.method == "POST":
         # do this
         order_no = request.form.get("order_no")
@@ -173,7 +170,6 @@ def open_orders():
             deposit = (row["deposit"])
             balance = total_cost - deposit- amount_paid
             db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", balance, order_id)
-        #user_name = session ["user"]
         finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
         return render_template("open_orders.html", ord_detail = finals, user = user)
 
