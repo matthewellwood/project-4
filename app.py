@@ -50,11 +50,7 @@ def login():
             pass_check = row["password"]
             name = row["username"]
             if name == user:
-                #pass_answer= "Wrong"
-                # Check password is correct
                 if password == pass_check:
-                    #pass_answer = "Correct"
-                #if pass_answer == "Correct":
                     session["user"] = user
                     return render_template("user.html",user=user)
                 else:
@@ -108,7 +104,7 @@ def index():
         return render_template("login.html")
 
 
-@app.route("/home", methods=["GET", "POST"])
+@app.route("/home", methods=["GET"])
 def home():
     """Show Home Page"""
     if "user" in session:
@@ -512,5 +508,8 @@ def remove_item():
                 new_total += line_cost
             db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", new_total, order_no )
             db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", new_total, order_no )
-        return render_template("home.html")
+        if "user" in session:
+            user = session["user"]
+            return render_template ("home.html", user = user)
+    
   
