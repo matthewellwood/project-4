@@ -120,15 +120,12 @@ def user():
         return render_template ("home.html", user = user)
     
 
-@app.route("/start", methods=["GET", "POST"])
+@app.route("/start", methods=["GET"])
 def start():
     """Show Home Page"""
     # get things started
     session.clear()
-    if request.method == "POST":
-        return render_template ("home.html")
-    else:
-        return render_template("start.html")
+    return render_template("start.html")
     
 
 @app.route("/orders", methods=["GET", "POST"])
@@ -237,7 +234,6 @@ def view_bedroom():
 def add_to_order():
     """Show Order Form"""
     if request.method == "POST":
-        order_cost = 0.00
         order_no = request.form.get("order_no")
         item_id = request.form.get("item_id")
         quantity = request.form.get("Quantity")
@@ -252,16 +248,14 @@ def add_to_order():
             selling_price = row["selling_price"]
             db.execute("INSERT INTO current_order (item_id, selling_price, quantity, order_number, staff_member) VALUES (?, ?, ?, ?, ?);",item_id, selling_price, quantity, order_no, user)
         current = db.execute("SELECT * FROM current_order JOIN stock ON current_order.item_id = stock.item_id WHERE order_number = (?);", order_no)
-        tot = float(0.00)
+        order_cost = float(0.00)
         for row in current:
             sell = float(row["selling_price"])
-            quant = int(quantity)
-            total = (quant * sell)
-            tot += (total)
-            line_tot = (quant * sell)
-            order_cost += line_tot
-            db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", order_cost, order_no)
-        return render_template("current_order.html",current = current, order_number = order_no, total_cost = order_cost)
+            test_quant = row["Quantity"]
+            line_tot = (test_quant * sell)
+            order_cost += (line_tot)
+        db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", order_cost, order_no)
+        return render_template("current_order.html",current = current, order_number = order_no, total_cost = order_cost, line_tot = line_tot)
     else:
         # If GET 
         return render_template("stock_list.html")
@@ -475,7 +469,11 @@ def cancel():
         if request.method == "POST":
             order_number = request.form.get("order_no")
             db.execute("DELETE FROM current_order WHERE order_number = (?)  ;", order_number)
-            return render_template("home.html")
+            totals=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_no)
+            for row in totals:
+                total_paid = (row["tot_paid"]) 
+                finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+                return render_template("open_orders.html", total_paid = total_paid, ord_detail = finals)
 
 
 
@@ -504,8 +502,10 @@ def remove_item():
                 new_total += line_cost
             db.execute("UPDATE current_order SET total_cost = (?) WHERE order_number = (?);", new_total, order_no )
             db.execute("UPDATE orders SET balance = (?) WHERE order_id = (?);", new_total, order_no )
-        if "user" in session:
-            user = session["user"]
-            return render_template ("home.html", user = user)
+            totals=db.execute("select order_number, SUM(amount_paid) AS tot_paid FROM payments WHERE order_number = (?);", order_no)
+            for row in totals:
+                total_paid = (row["tot_paid"]) 
+                finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
+                return render_template("open_orders.html", total_paid = total_paid, ord_detail = finals)
     
   
