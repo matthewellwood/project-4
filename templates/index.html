@@ -1,29 +1,29 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Index
+Start Screen
 {% endblock %}
-
+{% block navbar %} {% endblock %}
 {% block main %}
 
 
 <div class="section">
-    <h2 class ="titles-colour-deep">Alexander Ellis Ordering System</h2>
-    <h2 class ="titles-colour-deep">Staff Login</h2>
-
+    <body class="background-login">
+    <h2 class ="titles-colour-blue">Alexander Ellis Ordering System</h2>
     <table class="table table-striped">
-        <tbody>
-             <form action="/" method="post">
-                    <body class="background-login">
-                        <div class="row my-custom-row justify-content-center align-items-center">
-                            <div class="col-sm-4">
-                                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="name" placeholder="Name" type="text">
-                                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="password" placeholder="Password" type="text">
-                            </div>
-                        </div>
-                    </div>
-            <button class="btn btn-primary" type="submit">Submit</button>            
+        <table>
+            <form action="/login" method="GET">
+                <td><button class="login-left-button" type="submit">Login</button></td>
+            </form> 
+            <td></td>
+        <form action="/register" method="GET">
+            <td><button  class="login-right-button" type="submit">Register User</button></td>
+        </form>
+      
+        
+        </table>           
         </tbody>
     </table>
+</div>
 </div>
 {% endblock %}

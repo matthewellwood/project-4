@@ -31,6 +31,12 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@app.route("/", methods=["GET"])
+def index():
+    """Show Home Page"""
+    # get things started
+    return render_template("index.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -52,7 +58,7 @@ def login():
             if name == user:
                 if password == pass_check:
                     session["user"] = user
-                    return render_template("user.html",user=user)
+                    return render_template("home.html",user=user)
                 else:
                     return render_template("password_wrong.html", password=password, user=user)
             else:
@@ -68,7 +74,7 @@ def logout():
     # Forget any user_id
     session.clear()
     # Redirect user to login form
-    return redirect("start")
+    return render_template ("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -78,7 +84,7 @@ def register():
     else:
         #Get user to input a name
         username = request.form.get("username")
-        current_users = db.execute("SELECT username FROM users);")
+        current_users = db.execute("SELECT username FROM users;")
         #check that name is not already registereed
         for user in current_users:
             used_name = user["username"]
@@ -90,18 +96,6 @@ def register():
         return render_template("login.html")
 
 
-
-@app.route("/", methods=["GET", "POST"])
-def index():
-    """Show Home Page"""
-    # get things started
-    if "user" in session:
-        user = session["user"]
-        return render_template ("home.html", user = user)
-    else:
-        return render_template("login.html")
-
-
 @app.route("/home", methods=["GET"])
 def home():
     """Show Home Page"""
@@ -109,24 +103,7 @@ def home():
         user = session["user"]
         # get things started
         return render_template ("home.html", user = user)
-
-
-@app.route("/user", methods=["GET", "POST"])
-def user():
-    """Show Home Page"""
-    if "user" in session:
-        user = session["user"]
-        # get things started
-        return render_template ("home.html", user = user)
-    
-
-@app.route("/start", methods=["GET"])
-def start():
-    """Show Home Page"""
-    # get things started
-    session.clear()
-    return render_template("start.html")
-    
+      
 
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
