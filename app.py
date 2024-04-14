@@ -11,15 +11,15 @@ from extras import apology, login_required, GBP
 # Configure application
 app = Flask(__name__, static_folder='static')
 
-# Custom filter
+# Custom filter for GBP (Great Britain Pounds)
 app.jinja_env.filters["GBP"] = GBP
 
-# Configure session to use filesystem (instead of signed cookies)
+# Set up session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure CS50 Library to use SQLite database
+# Set up the CS50 Library to be able to use the SQLite database
 db = SQL("sqlite:///aepricelist.db")
 
 
@@ -34,7 +34,7 @@ def after_request(response):
 @app.route("/", methods=["GET"])
 def index():
     """Show Home Page"""
-    # get things started
+    # get things started and show Main Page
     return render_template("index.html")
 
 
@@ -56,16 +56,21 @@ def login():
             pass_check = row["password"]
             name = row["username"]
             if name == user:
+                # Check the Password is Valid
                 if password == pass_check:
+                    # If all Valid, set session user and show home page
                     session["user"] = user
                     return render_template("home.html",user=user)
                 else:
+                    # Show Password Wrong page with explanation of what is wrong
                     return render_template("password_wrong.html", password=password, user=user)
             else:
+                # Show Username Wrong page with explanation of what is wrong
                 return render_template("username_wrong.html",user=user) 
         else:
                 return render_template("username_wrong.html",user=user)    
     else:
+        # If arrived here from GET show Staff login page
         return render_template("login.html")
     
 @app.route("/logout")
@@ -101,7 +106,7 @@ def home():
     """Show Home Page"""
     if "user" in session:
         user = session["user"]
-        # get things started
+        # show the home page
         return render_template ("home.html", user = user)
       
 
