@@ -103,6 +103,21 @@ nav .navbar-brand
         right : 100px;
       }
 
+
+      .bottom-button {
+        background-color: #13dfaf;
+        width: 200px;
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        color: black;
+        cursor: pointer;
+        position: absolute;
+        top : 400px;
+        right : 480px;
+        font-weight: bolder;
+      }
+
       .middle-button {
         background-color: blue;
         width: 200px;
@@ -237,7 +252,7 @@ nav .navbar-brand
       right : 300px;
     }
 
-    .login-left-button {
+    .login-button {
       background-color: blue;
       width: 200px;
       font-size: 20px;
@@ -247,5 +262,5 @@ nav .navbar-brand
       cursor: pointer;
       position: absolute;
       top : 100px;
-      left : 300px;
+      left : 500px;
     }
