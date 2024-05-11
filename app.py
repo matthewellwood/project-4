@@ -356,18 +356,6 @@ def new_customer():
         return render_template("new_customer.html")
 
 
-@app.route("/payments", methods=["GET", "POST"])
-def payments():
-    """Show Order Form"""
-    if request.method == "POST":
-        order_number = request.form.get("order_no")
-        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
-        return render_template("payments.html", payments =  ord_detail)
-    else:
-        ord_detail = db.execute("select orders.staff_member, orders.cust_id, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
-        return render_template("payments.html", payments =  ord_detail)
-
-
 @app.route("/pay", methods =["GET","POST"])
 def pay():
     """Show Payments screen"""
@@ -490,11 +478,4 @@ def remove_item():
                 finals = db.execute("select current_order.order_number, current_order.amount_paid, orders.staff_member, orders.cust_id, balance, first_name, last_name, order_id,orders.order_date, orders.deposit, completion, orders.delivery_date, balance, total_cost from orders JOIN customers on orders.cust_id = customers.id JOIN current_order ON current_order.order_number = orders.order_id GROUP BY order_id;")
                 return render_template("open_orders.html", total_paid = total_paid, ord_detail = finals)
     
-
-
-@app.route("/gallery", methods=["GET"])
-def gallery():
-    """Show Home Page"""
-    # get things started and show Main Page
-    return render_template("gallery.html")
   

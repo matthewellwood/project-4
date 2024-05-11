@@ -90,6 +90,21 @@ nav .navbar-brand
         left : 100px;
       }
 
+
+      .left-left-button {
+        background-color: blue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        margin: 4px 2px;
+        cursor: pointer;
+
+      }
+
       .right-button {
         background-color: blue;
         width: 200px;
